@@ -1,0 +1,2167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EndoGeniety Society — Build Beyond Limits</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:              #050510;
+      --bg-2:            #0A0A1A;
+      --bg-3:            #0D0D22;
+      --bg-card:         #0F0F28;
+      --white:           #ffffff;
+      --cyan:            #00D4FF;
+      --cyan-dim:        rgba(0, 212, 255, 0.7);
+      --cyan-200:        #80EAFF;
+      --cyan-100:        #CCFAFF;
+      --cyan-dark:       #009DBD;
+      --blue:            #0066FF;
+      --blue-dark:       #0044BB;
+      --green:           #00FFB2;
+      --green-dim:       rgba(0, 255, 178, 0.15);
+      --card-bg:         rgba(0, 212, 255, 0.04);
+      --card-border:     rgba(0, 212, 255, 0.18);
+      --card-border-h:   rgba(0, 212, 255, 0.45);
+      --neutral:         #5A5A80;
+      --neutral-light:   #8888B0;
+      --neutral-lighter: #7070A0;
+      --neutral-dark:    #3A3A60;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--white);
+      font-family: 'Space Grotesk', Arial, sans-serif;
+      font-size: 1rem;
+      line-height: 1.5;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* ─── NAVBAR ─── */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 68px;
+      background: rgba(5, 5, 16, 0.88);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(0, 212, 255, 0.12);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--white);
+      letter-spacing: -0.2px;
+    }
+
+    .nav-logo img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+    }
+
+    .nav-logo-text {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: 0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-links a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--neutral-light);
+      transition: color .2s;
+    }
+
+    .nav-links a:hover { color: var(--white); }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s;
+      border: none;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--cyan-200);
+      border: 1px solid rgba(0, 212, 255, 0.25);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(0, 212, 255, 0.08);
+      color: var(--white);
+      border-color: rgba(0, 212, 255, 0.5);
+    }
+
+    .btn-cyan {
+      background: var(--cyan);
+      color: #020815;
+      font-weight: 700;
+    }
+
+    .btn-cyan:hover {
+      background: #33DEFF;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 28px rgba(0, 212, 255, 0.4);
+    }
+
+    .btn-blue {
+      background: var(--blue);
+      color: var(--white);
+    }
+
+    .btn-blue:hover {
+      background: #1a75ff;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(0, 102, 255, 0.35);
+    }
+
+    .btn-outline-white {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .btn-outline-white:hover {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(255,255,255,0.4);
+    }
+
+    .btn-outline-cyan {
+      background: transparent;
+      color: var(--cyan);
+      border: 1px solid rgba(0, 212, 255, 0.4);
+    }
+
+    .btn-outline-cyan:hover {
+      background: rgba(0, 212, 255, 0.08);
+      border-color: var(--cyan);
+    }
+
+    .btn-lg {
+      padding: 14px 28px;
+      font-size: 1rem;
+      border-radius: 10px;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 68px;
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -20%;
+      left: -10%;
+      width: 900px;
+      height: 900px;
+      background: radial-gradient(circle, rgba(0, 212, 255, 0.10) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 15%;
+      right: -10%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0, 102, 255, 0.08) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 80px 40px 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 212, 255, 0.08);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--cyan-200);
+      margin-bottom: 24px;
+    }
+
+    .hero-badge-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .hero-h1 {
+      font-size: clamp(2.5rem, 5vw, 3.8rem);
+      font-weight: 700;
+      line-height: 1.08;
+      color: var(--white);
+      margin: 0 0 20px;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-h1 span {
+      color: var(--cyan);
+      text-shadow: 0 0 40px rgba(0, 212, 255, 0.4);
+    }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--neutral-light);
+      margin: 0 0 36px;
+      max-width: 480px;
+      line-height: 1.7;
+    }
+
+    .hero-ctas {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 48px;
+    }
+
+    .hero-social-proof {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatars {
+      display: flex;
+    }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 2px solid var(--bg);
+      margin-left: -8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .avatars .avatar:first-child { margin-left: 0; }
+
+    .avatar-1 { background: #00D4FF; color: #020815; }
+    .avatar-2 { background: #0066FF; }
+    .avatar-3 { background: #00FFB2; color: #020815; }
+    .avatar-4 { background: #7B61FF; }
+
+    .social-text {
+      font-size: 0.85rem;
+      color: var(--neutral-lighter);
+    }
+
+    .social-text strong {
+      color: var(--white);
+      font-weight: 600;
+    }
+
+    /* Dashboard mockup */
+    .hero-visual {
+      position: relative;
+    }
+
+    .hero-visual-glow {
+      position: absolute;
+      inset: -30px;
+      background: radial-gradient(ellipse at center, rgba(0, 212, 255, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .dashboard-card {
+      background: rgba(10, 10, 30, 0.92);
+      border: 1px solid rgba(0, 212, 255, 0.25);
+      border-radius: 16px;
+      padding: 24px;
+      position: relative;
+      z-index: 1;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 60px rgba(0, 212, 255, 0.06);
+    }
+
+    .dashboard-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .dashboard-title {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--neutral-lighter);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .dashboard-nav-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .dot-red    { background: #ff5f57; }
+    .dot-yellow { background: #febc2e; }
+    .dot-green  { background: #28c840; }
+
+    .dashboard-big-num {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 4px;
+      letter-spacing: -1px;
+    }
+
+    .dashboard-sub {
+      font-size: 0.8rem;
+      color: var(--neutral-lighter);
+      margin-bottom: 24px;
+    }
+
+    .dashboard-chart {
+      height: 80px;
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+
+    .bar {
+      flex: 1;
+      border-radius: 4px 4px 0 0;
+      transition: opacity .2s;
+    }
+
+    .bar:hover { opacity: 0.8; }
+
+    .bar-cyan  { background: var(--cyan); }
+    .bar-blue  { background: var(--blue); }
+
+    .dashboard-metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    .metric-item {
+      background: rgba(0, 212, 255, 0.06);
+      border: 1px solid rgba(0, 212, 255, 0.18);
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    .metric-label {
+      font-size: 0.7rem;
+      color: var(--neutral-lighter);
+      margin-bottom: 4px;
+    }
+
+    .metric-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .metric-value.positive { color: var(--green); }
+    .metric-value.accent   { color: var(--cyan); }
+
+    .floating-card {
+      position: absolute;
+      background: rgba(10, 10, 30, 0.96);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 0.82rem;
+      white-space: nowrap;
+      box-shadow: 0 4px 24px rgba(0, 212, 255, 0.1);
+    }
+
+    .floating-card-1 {
+      bottom: -20px;
+      left: -30px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .floating-card-2 {
+      top: -16px;
+      right: -20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    /* ─── SECTION WRAPPER ─── */
+    .section {
+      padding: 100px 40px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 14px;
+    }
+
+    .section-label::before {
+      content: '';
+      width: 20px;
+      height: 2px;
+      background: var(--cyan);
+      border-radius: 2px;
+    }
+
+    .section-h2 {
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--white);
+      margin: 0 0 16px;
+      letter-spacing: -0.3px;
+    }
+
+    .section-sub {
+      font-size: 1.05rem;
+      color: var(--neutral-light);
+      max-width: 540px;
+      line-height: 1.65;
+    }
+
+    /* ─── LOGOS STRIP ─── */
+    .logos-strip {
+      background: var(--bg-2);
+      padding: 40px;
+      border-top: 1px solid rgba(0, 212, 255, 0.1);
+      border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+    }
+
+    .logos-strip-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 60px;
+      flex-wrap: wrap;
+    }
+
+    .logos-strip-label {
+      font-size: 0.82rem;
+      color: var(--neutral-lighter);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 500;
+    }
+
+    .logo-item {
+      font-size: 1rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: -0.3px;
+      transition: color .2s;
+    }
+
+    .logo-item:hover { color: rgba(0, 212, 255, 0.4); }
+
+    /* ─── STATS SECTION ─── */
+    .stats-section {
+      background: var(--bg-3);
+      padding: 100px 40px;
+      border-top: 1px solid rgba(0, 212, 255, 0.07);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stats-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 40px;
+    }
+
+    .stat-card {
+      background: rgba(4, 4, 18, 0.78);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      transition: border-color .2s;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .stat-card:hover { border-color: var(--card-border-h); }
+
+    .stat-num {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--cyan);
+      margin-bottom: 4px;
+      text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+    }
+
+    .stat-desc {
+      font-size: 0.85rem;
+      color: var(--neutral-light);
+      line-height: 1.4;
+    }
+
+    /* Dashboard preview */
+    .preview-card {
+      background: rgba(6, 6, 22, 0.9);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 0 60px rgba(0, 212, 255, 0.08);
+      position: relative;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .preview-top-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .preview-big {
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 6px;
+      letter-spacing: -1px;
+    }
+
+    .preview-label {
+      font-size: 0.8rem;
+      color: var(--neutral-lighter);
+      margin-bottom: 20px;
+    }
+
+    .preview-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+    }
+
+    .preview-row:last-child { border-bottom: none; }
+
+    .preview-row-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: var(--neutral-lighter);
+    }
+
+    .color-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .preview-row-val {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    /* ─── FEATURES GRID ─── */
+    .features-section {
+      background: var(--bg);
+      padding: 100px 40px;
+    }
+
+    .features-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .feat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 32px 28px;
+      transition: border-color .2s, transform .2s, box-shadow .2s;
+    }
+
+    .feat-card:hover {
+      border-color: var(--card-border-h);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0, 212, 255, 0.07);
+    }
+
+    .feat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(0, 212, 255, 0.1);
+      border: 1px solid rgba(0, 212, 255, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 1.3rem;
+    }
+
+    .feat-icon.blue-icon {
+      background: rgba(0, 102, 255, 0.1);
+      border-color: rgba(0, 102, 255, 0.25);
+    }
+
+    .feat-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+
+    .feat-desc {
+      font-size: 0.9rem;
+      color: var(--neutral-light);
+      line-height: 1.6;
+    }
+
+    /* ─── STEPS SECTION ─── */
+    .steps-section {
+      background: var(--bg-2);
+      padding: 100px 40px;
+      border-top: 1px solid rgba(0, 212, 255, 0.07);
+      border-bottom: 1px solid rgba(0, 212, 255, 0.07);
+    }
+
+    .steps-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .steps-header .section-label { justify-content: center; }
+    .steps-header .section-label::before { display: none; }
+    .steps-header .section-h2 { max-width: 600px; margin: 0 auto 16px; }
+    .steps-header .section-sub { margin: 0 auto; text-align: center; }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      position: relative;
+    }
+
+    .steps-grid::before {
+      content: '';
+      position: absolute;
+      top: 40px;
+      left: calc(33.33% - 8px);
+      width: calc(33.33%);
+      height: 1px;
+      background: linear-gradient(90deg, var(--cyan), transparent);
+      pointer-events: none;
+    }
+
+    .steps-grid::after {
+      content: '';
+      position: absolute;
+      top: 40px;
+      left: calc(66.66% - 8px);
+      width: calc(33.33%);
+      height: 1px;
+      background: linear-gradient(90deg, var(--cyan), transparent);
+      pointer-events: none;
+    }
+
+    .step-card {
+      background: rgba(0, 212, 255, 0.04);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 32px 28px;
+      position: relative;
+      transition: border-color .2s;
+    }
+
+    .step-card:hover { border-color: var(--card-border-h); }
+
+    .step-num {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--cyan);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .step-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+
+    .step-desc {
+      font-size: 0.9rem;
+      color: var(--neutral-light);
+      line-height: 1.6;
+    }
+
+    .step-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: var(--cyan);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+    }
+
+    /* ─── HIGHLIGHT SECTION ─── */
+    .highlight-section {
+      background: var(--bg-3);
+      padding: 100px 40px;
+    }
+
+    .highlight-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .highlight-list {
+      list-style: none;
+      margin: 28px 0 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .highlight-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      font-size: 0.95rem;
+      color: var(--neutral-light);
+      line-height: 1.5;
+    }
+
+    .check-icon {
+      width: 22px;
+      height: 22px;
+      background: rgba(0, 255, 178, 0.12);
+      border: 1px solid rgba(0, 255, 178, 0.25);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      color: var(--green);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .highlight-visual {
+      position: relative;
+    }
+
+    .analytics-card {
+      background: var(--bg-card);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 28px;
+      color: var(--white);
+      box-shadow: 0 0 50px rgba(0, 212, 255, 0.05);
+    }
+
+    .analytics-title {
+      font-size: 0.78rem;
+      color: var(--neutral-lighter);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+    }
+
+    .analytics-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .analytics-bar-wrap {
+      flex: 1;
+      height: 8px;
+      background: rgba(0, 212, 255, 0.1);
+      border-radius: 100px;
+      margin: 0 14px;
+      overflow: hidden;
+    }
+
+    .analytics-bar-fill {
+      height: 100%;
+      border-radius: 100px;
+    }
+
+    .fill-cyan   { background: var(--cyan); }
+    .fill-blue   { background: var(--blue); }
+    .fill-cyan-2 { background: var(--cyan-200); }
+
+    .analytics-pct {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--white);
+      min-width: 36px;
+      text-align: right;
+    }
+
+    /* ─── DARK FEATURE SECTION ─── */
+    .dark-feature-section {
+      background: var(--bg);
+      padding: 100px 40px;
+    }
+
+    .dark-feature-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .dark-feat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .dark-feat-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 22px 18px;
+      transition: border-color .2s;
+    }
+
+    .dark-feat-item:hover { border-color: var(--card-border-h); }
+
+    .dark-feat-item-icon {
+      font-size: 1.4rem;
+      margin-bottom: 12px;
+    }
+
+    .dark-feat-item-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+
+    .dark-feat-item-desc {
+      font-size: 0.8rem;
+      color: var(--neutral-light);
+      line-height: 1.5;
+    }
+
+    /* ─── GUIDE SECTION ─── */
+    .guide-section {
+      background: var(--bg-2);
+      padding: 100px 40px;
+      border-top: 1px solid rgba(0, 212, 255, 0.07);
+    }
+
+    .guide-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+
+    .tag {
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .tag-cyan { background: rgba(0, 212, 255, 0.1); color: var(--cyan); border: 1px solid rgba(0, 212, 255, 0.2); }
+    .tag-blue { background: rgba(0, 102, 255, 0.1); color: #6699FF; border: 1px solid rgba(0, 102, 255, 0.2); }
+
+    .guide-visual {
+      background: var(--bg-card);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 28px;
+    }
+
+    .guide-kpi-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .kpi-cell {
+      background: rgba(0, 212, 255, 0.05);
+      border: 1px solid rgba(0, 212, 255, 0.15);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .kpi-cell-label {
+      font-size: 0.75rem;
+      color: var(--neutral-lighter);
+      margin-bottom: 6px;
+    }
+
+    .kpi-cell-val {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .kpi-cell-val.cyan  { color: var(--cyan); }
+    .kpi-cell-val.green { color: var(--green); }
+
+    /* ─── FINAL CTA SECTION ─── */
+    .final-cta-section {
+      background: var(--bg);
+      padding: 120px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .final-cta-section::before {
+      content: '';
+      position: absolute;
+      top: -80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 400px;
+      background: radial-gradient(ellipse at center, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .final-cta-inner {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .final-cta-inner .section-h2 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      margin-bottom: 20px;
+    }
+
+    .final-cta-inner .section-sub {
+      margin: 0 auto 40px;
+      text-align: center;
+    }
+
+    .final-cta-form {
+      display: flex;
+      gap: 10px;
+      max-width: 440px;
+      margin: 0 auto 16px;
+    }
+
+    .email-input {
+      flex: 1;
+      padding: 13px 18px;
+      border-radius: 10px;
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      background: rgba(0, 212, 255, 0.05);
+      color: var(--white);
+      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    .email-input::placeholder { color: var(--neutral-lighter); }
+
+    .email-input:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+    }
+
+    .final-note {
+      font-size: 0.8rem;
+      color: var(--neutral-lighter);
+    }
+
+    /* ─── DARK BAND CTA ─── */
+    .dark-band {
+      background: linear-gradient(135deg, #0A1628 0%, #050F24 50%, #0A0A1A 100%);
+      border-top: 1px solid rgba(0, 102, 255, 0.2);
+      border-bottom: 1px solid rgba(0, 102, 255, 0.2);
+      padding: 80px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dark-band::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 300px;
+      background: radial-gradient(ellipse, rgba(0, 102, 255, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .dark-band-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .dark-band-inner h2 {
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 700;
+      color: var(--white);
+      margin: 0 0 16px;
+    }
+
+    .dark-band-inner p {
+      font-size: 1.05rem;
+      color: var(--neutral-light);
+      margin: 0 0 36px;
+    }
+
+    /* ─── FOOTER ─── */
+    .footer {
+      background: var(--bg-2);
+      border-top: 1px solid rgba(0, 212, 255, 0.12);
+      padding: 60px 40px 32px;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+
+    .footer-brand p {
+      font-size: 0.88rem;
+      color: var(--neutral-lighter);
+      line-height: 1.6;
+      margin-top: 14px;
+      max-width: 280px;
+    }
+
+    .footer-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .footer-logo img {
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+    }
+
+    .footer-logo-text {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: 0.5px;
+    }
+
+    .footer-col-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.4px;
+      color: var(--neutral-lighter);
+      margin-bottom: 18px;
+    }
+
+    .footer-links {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-links a {
+      font-size: 0.88rem;
+      color: var(--neutral-light);
+      transition: color .2s;
+    }
+
+    .footer-links a:hover { color: var(--cyan); }
+
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 28px;
+      border-top: 1px solid rgba(0, 212, 255, 0.1);
+    }
+
+    .footer-copy {
+      font-size: 0.82rem;
+      color: var(--neutral-lighter);
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 12px;
+    }
+
+    .social-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(0, 212, 255, 0.06);
+      border: 1px solid rgba(0, 212, 255, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: var(--neutral-light);
+      transition: all .2s;
+      cursor: pointer;
+    }
+
+    .social-btn:hover {
+      background: rgba(0, 212, 255, 0.15);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-visual { display: none; }
+      .stats-inner,
+      .highlight-inner,
+      .dark-feature-inner,
+      .guide-inner { grid-template-columns: 1fr; gap: 40px; }
+      .features-grid,
+      .steps-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+    }
+
+    @media (max-width: 600px) {
+      .section { padding: 60px 20px; }
+      .nav { padding: 0 20px; }
+      .footer-top { grid-template-columns: 1fr; }
+      .final-cta-form { flex-direction: column; }
+    }
+
+    /* ─── EYE ─── */
+    #eye-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      filter: drop-shadow(0 0 50px rgba(0, 212, 255, 0.18));
+      transition: transform 0.08s cubic-bezier(0.4, 0, 1, 1);
+      transform-origin: 50% 50%;
+    }
+
+    #eye-svg.blinking {
+      transform: scaleY(0.04);
+    }
+
+    #iris-spin {
+      animation: iris-rotate 20s linear infinite;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    @keyframes iris-rotate {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    @keyframes eye-outer-pulse {
+      0%, 100% { opacity: 0.06; }
+      50%       { opacity: 0.14; }
+    }
+
+    .eye-ambient {
+      animation: eye-outer-pulse 3.5s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── NAVBAR ─── -->
+  <nav class="nav">
+    <a href="#" class="nav-logo">
+      <img src="brand_assets/AIS.png" alt="ENDO logo" />
+      <span class="nav-logo-text">ENDO</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#">Products</a></li>
+      <li><a href="#">Pricing</a></li>
+      <li><a href="#">Community</a></li>
+      <li><a href="#">Blog</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="btn btn-ghost">Sign In</button>
+      <button class="btn btn-cyan">Get Started →</button>
+    </div>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          Now Live — Global Community Platform
+        </div>
+        <h1 class="hero-h1">
+          Build Beyond<br/>
+          <span>Limits</span>
+        </h1>
+        <p class="hero-sub">
+          Join the EndoGeniety Society — a global community of builders, innovators, and visionaries. Access world-class tools, mentorship, and a network that helps you ship faster and think bigger.
+        </p>
+        <div class="hero-ctas">
+          <button class="btn btn-cyan btn-lg">Get Started →</button>
+          <button class="btn btn-outline-white btn-lg">Explore Platform</button>
+        </div>
+        <div class="hero-social-proof">
+          <div class="avatars">
+            <div class="avatar avatar-1">AK</div>
+            <div class="avatar avatar-2">BM</div>
+            <div class="avatar avatar-3">CL</div>
+            <div class="avatar avatar-4">DT</div>
+          </div>
+          <p class="social-text"><strong>+52,341 builders</strong> trust the Society</p>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <svg id="eye-svg" viewBox="0 0 600 340" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="glow-sm" x="-25%" y="-25%" width="150%" height="150%">
+              <feGaussianBlur stdDeviation="4" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="glow-lg" x="-60%" y="-60%" width="220%" height="220%">
+              <feGaussianBlur stdDeviation="14" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <radialGradient id="rg-iris" cx="50%" cy="50%" r="50%">
+              <stop offset="0%"   stop-color="#003D5C"/>
+              <stop offset="55%"  stop-color="#001C30"/>
+              <stop offset="100%" stop-color="#000D1A"/>
+            </radialGradient>
+            <radialGradient id="rg-pupil" cx="42%" cy="38%" r="58%">
+              <stop offset="0%"   stop-color="#0C1E35"/>
+              <stop offset="100%" stop-color="#010408"/>
+            </radialGradient>
+            <clipPath id="eye-clip">
+              <path d="M28,170 C148,22 452,22 572,170 C452,318 148,318 28,170 Z"/>
+            </clipPath>
+          </defs>
+
+          <!-- Ambient outer ring (pulsing) -->
+          <ellipse class="eye-ambient" cx="300" cy="170" rx="296" ry="174"
+                   fill="none" stroke="#00D4FF" stroke-width="1.5"/>
+
+          <!-- ── EYE INTERIOR (clipped to almond shape) ── -->
+          <g clip-path="url(#eye-clip)">
+            <!-- Background fill -->
+            <path d="M28,170 C148,22 452,22 572,170 C452,318 148,318 28,170 Z" fill="#010810"/>
+
+            <!-- Iris base -->
+            <circle cx="300" cy="170" r="118" fill="url(#rg-iris)"/>
+
+            <!-- Spinning dashed rings (iris texture) -->
+            <g id="iris-spin">
+              <circle cx="300" cy="170" r="111" fill="none" stroke="rgba(0,212,255,0.22)" stroke-width="1"   stroke-dasharray="7 16"/>
+              <circle cx="300" cy="170" r="97"  fill="none" stroke="rgba(0,170,220,0.16)" stroke-width="0.8" stroke-dasharray="4 22"/>
+              <circle cx="300" cy="170" r="83"  fill="none" stroke="rgba(0,212,255,0.2)"  stroke-width="0.8" stroke-dasharray="3 10"/>
+            </g>
+
+            <!-- Static iris rings -->
+            <circle cx="300" cy="170" r="72" fill="none" stroke="rgba(0,212,255,0.38)" stroke-width="1.8"/>
+            <circle cx="300" cy="170" r="56" fill="none" stroke="rgba(0,140,210,0.22)" stroke-width="1"/>
+
+            <!-- Radial spoke lines -->
+            <g stroke="#00D4FF" stroke-width="0.7" opacity="0.13">
+              <line x1="300" y1="52"  x2="300" y2="114"/>
+              <line x1="300" y1="226" x2="300" y2="288"/>
+              <line x1="182" y1="170" x2="240" y2="170"/>
+              <line x1="360" y1="170" x2="418" y2="170"/>
+              <line x1="217" y1="87"  x2="255" y2="128"/>
+              <line x1="383" y1="87"  x2="345" y2="128"/>
+              <line x1="217" y1="253" x2="255" y2="212"/>
+              <line x1="383" y1="253" x2="345" y2="212"/>
+            </g>
+
+            <!-- Iris outer glow ring -->
+            <circle cx="300" cy="170" r="118" fill="none" stroke="#00D4FF" stroke-width="2.5"
+                    opacity="0.32" filter="url(#glow-sm)"/>
+
+            <!-- ── PUPIL GROUP (moved by JS) ── -->
+            <g id="pupil-group">
+              <circle id="pupil-outer" cx="300" cy="170" r="50" fill="url(#rg-pupil)"/>
+              <circle id="pupil-ring"  cx="300" cy="170" r="46" fill="none"
+                      stroke="rgba(0,212,255,0.18)" stroke-width="1"/>
+              <circle id="pupil-inner" cx="300" cy="170" r="33" fill="#000308"/>
+              <!-- Glints -->
+              <circle id="glint-a" cx="317" cy="153" r="9"   fill="white" opacity="0.88"/>
+              <circle id="glint-b" cx="329" cy="164" r="4.5" fill="white" opacity="0.42"/>
+              <circle id="glint-c" cx="289" cy="184" r="2.5" fill="rgba(0,212,255,0.8)" opacity="0.7"/>
+            </g>
+          </g>
+
+          <!-- ── EYE OUTLINE (rendered above the clip) ── -->
+          <path d="M28,170 C148,22 452,22 572,170"
+                fill="none" stroke="#00D4FF" stroke-width="2.5" filter="url(#glow-sm)"/>
+          <path d="M572,170 C452,318 148,318 28,170"
+                fill="none" stroke="#00D4FF" stroke-width="2.5" filter="url(#glow-sm)"/>
+
+          <!-- Upper-lid shimmer highlight -->
+          <path d="M88,138 C180,68 420,68 512,138"
+                fill="none" stroke="rgba(0,212,255,0.5)" stroke-width="1"
+                filter="url(#glow-lg)" opacity="0.65"/>
+
+          <!-- ── TECH / HUD DECORATIONS ── -->
+          <!-- Corner brackets -->
+          <g stroke="#00D4FF" stroke-width="1.5" stroke-linecap="round" opacity="0.42">
+            <polyline points="4,28  4,5  27,5"/>
+            <polyline points="596,28 596,5 573,5"/>
+            <polyline points="4,312 4,335 27,335"/>
+            <polyline points="596,312 596,335 573,335"/>
+          </g>
+
+          <!-- Center crosshair ticks (sides of eye) -->
+          <g stroke="#00D4FF" stroke-width="1.5" stroke-linecap="round" opacity="0.32">
+            <line x1="4"   y1="170" x2="22"  y2="170"/>
+            <line x1="578" y1="170" x2="596" y2="170"/>
+          </g>
+
+          <!-- HUD text labels -->
+          <text x="30" y="20" font-family="Space Grotesk,monospace" font-size="8.5"
+                fill="#00D4FF" opacity="0.38" letter-spacing="2.5">ENDOGENIETY · IRIS</text>
+          <text x="30" y="330" font-family="Space Grotesk,monospace" font-size="8.5"
+                fill="#00D4FF" opacity="0.32" letter-spacing="2">52,341 MEMBERS ACTIVE</text>
+          <text id="hud-angle" x="570" y="20" font-family="Space Grotesk,monospace" font-size="8.5"
+                fill="#00D4FF" opacity="0.38" letter-spacing="2" text-anchor="end">∠ 000°</text>
+          <text id="hud-dist" x="570" y="330" font-family="Space Grotesk,monospace" font-size="8.5"
+                fill="#00D4FF" opacity="0.32" letter-spacing="2" text-anchor="end">TRACKING</text>
+        </svg>
+
+        <!-- Floating status cards -->
+        <div class="floating-card floating-card-1">
+          <div class="pulse-dot"></div>
+          <span style="color:var(--neutral-lighter);font-size:0.78rem;">Tracking active</span>
+        </div>
+        <div class="floating-card floating-card-2">
+          <span style="font-size:0.68rem;font-weight:700;color:var(--cyan);letter-spacing:1.5px;">LOCKED</span>
+          <div id="eye-readout" style="font-size:0.75rem;font-weight:700;color:var(--white);">0° · —</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── LOGOS STRIP ─── -->
+  <div class="logos-strip">
+    <div class="logos-strip-inner">
+      <span class="logos-strip-label">Members building at</span>
+      <span class="logo-item">Stripe</span>
+      <span class="logo-item">Notion</span>
+      <span class="logo-item">Shopify</span>
+      <span class="logo-item">Figma</span>
+      <span class="logo-item">Vercel</span>
+      <span class="logo-item">Linear</span>
+    </div>
+  </div>
+
+  <!-- ─── STATS SECTION ─── -->
+  <section class="stats-section">
+    <!-- WebGL shader background -->
+    <canvas id="shader-bg" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;display:block;"></canvas>
+    <!-- Dark overlay keeps text readable -->
+    <div style="position:absolute;inset:0;z-index:0;background:linear-gradient(135deg,rgba(5,5,16,0.70) 0%,rgba(8,10,24,0.58) 100%);pointer-events:none;"></div>
+    <div class="stats-inner">
+      <div class="stats-left">
+        <div class="section-label">Results</div>
+        <h2 class="section-h2">Real Impact from Our Community</h2>
+        <p class="section-sub">
+          Society members ship faster, connect deeper, and achieve more. The numbers speak for themselves.
+        </p>
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-num">3×</div>
+            <div class="stat-desc">faster to ship your first project with Society resources</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">52K+</div>
+            <div class="stat-desc">active members in the global ENDO network</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">78.2%</div>
+            <div class="stat-desc">project success rate for mentored members</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">13,847</div>
+            <div class="stat-desc">projects launched and live through ENDO</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="preview-card">
+        <div class="preview-top-bar">
+          <div class="dot dot-red"></div>
+          <div class="dot dot-yellow"></div>
+          <div class="dot dot-green"></div>
+        </div>
+        <div class="preview-big">52,341</div>
+        <div class="preview-label">Total members as of June 3, 2026</div>
+
+        <div style="display:flex;justify-content:center;margin:20px 0;">
+          <svg width="160" height="160" viewBox="0 0 160 160">
+            <circle cx="80" cy="80" r="60" fill="none" stroke="rgba(0,212,255,0.1)" stroke-width="20"/>
+            <circle cx="80" cy="80" r="60" fill="none" stroke="#00D4FF" stroke-width="20"
+              stroke-dasharray="226 150" stroke-dashoffset="-30" stroke-linecap="round"/>
+            <circle cx="80" cy="80" r="60" fill="none" stroke="#0066FF" stroke-width="20"
+              stroke-dasharray="90 286" stroke-dashoffset="-256" stroke-linecap="round"/>
+            <text x="80" y="74" text-anchor="middle" font-size="18" font-weight="700" fill="white" font-family="Space Grotesk, Arial">52,341</text>
+            <text x="80" y="94" text-anchor="middle" font-size="10" fill="#7070A0" font-family="Space Grotesk, Arial">members</text>
+          </svg>
+        </div>
+
+        <div class="preview-row">
+          <div class="preview-row-label">
+            <div class="color-dot" style="background:var(--cyan)"></div>
+            Builders & Makers
+          </div>
+          <div class="preview-row-val">34,210</div>
+        </div>
+        <div class="preview-row">
+          <div class="preview-row-label">
+            <div class="color-dot" style="background:var(--blue)"></div>
+            Mentors & Leaders
+          </div>
+          <div class="preview-row-val">11,284</div>
+        </div>
+        <div class="preview-row">
+          <div class="preview-row-label">
+            <div class="color-dot" style="background:var(--green)"></div>
+            Organizations
+          </div>
+          <div class="preview-row-val">6,847</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FEATURES GRID ─── -->
+  <section class="features-section">
+    <div class="container">
+      <div class="features-header">
+        <div class="section-label" style="justify-content:center;">Platform</div>
+        <h2 class="section-h2">Everything you need to<br/>build beyond limits</h2>
+        <p class="section-sub" style="margin:0 auto;text-align:center;">
+          From community tools to expert mentorship, ENDO gives you the complete ecosystem to go from idea to impact.
+        </p>
+      </div>
+      <div class="features-grid">
+        <div class="feat-card">
+          <div class="feat-icon">🌐</div>
+          <h3 class="feat-title">Community Hub</h3>
+          <p class="feat-desc">Connect with builders, innovators, and leaders from across the globe. Find your circle and grow together.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">📚</div>
+          <h3 class="feat-title">Resource Library</h3>
+          <p class="feat-desc">Curated tools, frameworks, templates, and guides contributed by top practitioners in the community.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon blue-icon">⚡</div>
+          <h3 class="feat-title">Live Workshops</h3>
+          <p class="feat-desc">Interactive learning sessions led by industry leaders. Attend live or watch on-demand — you're always in the loop.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">🎯</div>
+          <h3 class="feat-title">Expert Mentorship</h3>
+          <p class="feat-desc">Get matched with proven builders for 1:1 guidance tailored to your goals, stage, and industry.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon blue-icon">🚀</div>
+          <h3 class="feat-title">Project Showcase</h3>
+          <p class="feat-desc">Share your work with a community that gets it. Get real feedback, find collaborators, and gain visibility.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">🏆</div>
+          <h3 class="feat-title">Achievement System</h3>
+          <p class="feat-desc">Earn recognition for contributions, milestones, and impact. Build a reputation that travels with you.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── STEPS SECTION ─── -->
+  <section class="steps-section">
+    <div class="container">
+      <div class="steps-header">
+        <div class="section-label">How It Works</div>
+        <h2 class="section-h2">Three steps to building something extraordinary</h2>
+        <p class="section-sub">
+          We designed ENDO so every action moves you closer to the impact you're capable of — nothing more, nothing less.
+        </p>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">Step 01</div>
+          <div class="step-icon">🧭</div>
+          <h3 class="step-title">Discover Your Path</h3>
+          <p class="step-desc">Explore resources, communities, and tools aligned with your goals. ENDO surfaces what's most relevant to where you're headed.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">Step 02</div>
+          <div class="step-icon">🤝</div>
+          <h3 class="step-title">Connect & Collaborate</h3>
+          <p class="step-desc">Join circles, attend events, find co-founders and collaborators who match your ambition and complement your skills.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">Step 03</div>
+          <div class="step-icon">🚀</div>
+          <h3 class="step-title">Build & Launch</h3>
+          <p class="step-desc">Ship your projects with community support, expert feedback, and the confidence that comes from building alongside the best.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── HIGHLIGHT SECTION ─── -->
+  <section class="highlight-section">
+    <div class="highlight-inner">
+      <div class="highlight-left">
+        <div class="section-label">Deep Insights</div>
+        <h2 class="section-h2">Understand what drives your growth</h2>
+        <p class="section-sub">
+          ENDO breaks down your network, learning progress, and project impact so you always know where to concentrate your energy next.
+        </p>
+        <ul class="highlight-list">
+          <li>
+            <div class="check-icon">✓</div>
+            <span>Track your contributions and community impact over time</span>
+          </li>
+          <li>
+            <div class="check-icon">✓</div>
+            <span>Measure skill development and knowledge acquisition</span>
+          </li>
+          <li>
+            <div class="check-icon">✓</div>
+            <span>Compare your progress against community benchmarks</span>
+          </li>
+          <li>
+            <div class="check-icon">✓</div>
+            <span>Identify your highest-leverage growth opportunities</span>
+          </li>
+        </ul>
+        <div style="margin-top:32px;">
+          <button class="btn btn-cyan btn-lg">Explore Analytics →</button>
+        </div>
+      </div>
+      <div class="highlight-visual">
+        <div class="analytics-card">
+          <div class="analytics-title">Engagement Breakdown</div>
+          <div style="margin-bottom:20px;">
+            <div style="font-size:2rem;font-weight:700;color:var(--white);">78.2%</div>
+            <div style="font-size:0.8rem;color:var(--neutral-lighter);">project success rate this quarter</div>
+          </div>
+          <div class="analytics-row">
+            <div style="font-size:0.82rem;color:var(--neutral-lighter);min-width:130px;">Projects Shipped</div>
+            <div class="analytics-bar-wrap">
+              <div class="analytics-bar-fill fill-cyan" style="width:78%"></div>
+            </div>
+            <div class="analytics-pct">78%</div>
+          </div>
+          <div class="analytics-row">
+            <div style="font-size:0.82rem;color:var(--neutral-lighter);min-width:130px;">Mentorship Matches</div>
+            <div class="analytics-bar-wrap">
+              <div class="analytics-bar-fill fill-blue" style="width:64%"></div>
+            </div>
+            <div class="analytics-pct">64%</div>
+          </div>
+          <div class="analytics-row">
+            <div style="font-size:0.82rem;color:var(--neutral-lighter);min-width:130px;">Workshop Completions</div>
+            <div class="analytics-bar-wrap">
+              <div class="analytics-bar-fill fill-cyan-2" style="width:91%"></div>
+            </div>
+            <div class="analytics-pct">91%</div>
+          </div>
+
+          <div style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(0,212,255,0.12);display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div style="background:rgba(0,255,178,0.07);border:1px solid rgba(0,255,178,0.18);border-radius:10px;padding:14px;">
+              <div style="font-size:0.72rem;color:var(--neutral-lighter);margin-bottom:4px;">MoM Growth</div>
+              <div style="font-size:1.2rem;font-weight:700;color:var(--green);">+18.4%</div>
+            </div>
+            <div style="background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.18);border-radius:10px;padding:14px;">
+              <div style="font-size:0.72rem;color:var(--neutral-lighter);margin-bottom:4px;">Churn Rate</div>
+              <div style="font-size:1.2rem;font-weight:700;color:var(--cyan-200);">1.8%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── DARK FEATURE SECTION ─── -->
+  <section class="dark-feature-section">
+    <div class="dark-feature-inner">
+      <div>
+        <div class="section-label">Collaboration</div>
+        <h2 class="section-h2">Share the vision with your entire team</h2>
+        <p class="section-sub" style="margin-bottom:36px;">
+          ENDO isn't just for individuals. Bring your team, startup, or organization and build together at scale. Every member gets what they need to contribute.
+        </p>
+        <button class="btn btn-cyan btn-lg">Start Building Now →</button>
+      </div>
+      <div class="dark-feat-grid">
+        <div class="dark-feat-item">
+          <div class="dark-feat-item-icon">👥</div>
+          <div class="dark-feat-item-title">Team Spaces</div>
+          <div class="dark-feat-item-desc">Private spaces for your team to collaborate, share, and grow together.</div>
+        </div>
+        <div class="dark-feat-item">
+          <div class="dark-feat-item-icon">📌</div>
+          <div class="dark-feat-item-title">Shared Resources</div>
+          <div class="dark-feat-item-desc">Centralize your team's tools, guides, and references in one place.</div>
+        </div>
+        <div class="dark-feat-item">
+          <div class="dark-feat-item-icon">🔗</div>
+          <div class="dark-feat-item-title">Collaborative Projects</div>
+          <div class="dark-feat-item-desc">Work on shared initiatives with visibility and accountability built in.</div>
+        </div>
+        <div class="dark-feat-item">
+          <div class="dark-feat-item-icon">🏅</div>
+          <div class="dark-feat-item-title">Team Achievements</div>
+          <div class="dark-feat-item-desc">Recognize and celebrate the collective wins that move the needle.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── GUIDE SECTION ─── -->
+  <section class="guide-section">
+    <div class="guide-inner">
+      <div class="guide-left">
+        <div class="section-label">Built to Guide, Not Just Measure</div>
+        <h2 class="section-h2">Make better decisions and structure your priorities to build faster</h2>
+        <p class="section-sub" style="margin-bottom:28px;">
+          ENDO is designed to give you strategic clarity, not just data. Every insight points you to what to do next so you stay focused on what actually matters.
+        </p>
+        <div class="tags">
+          <span class="tag tag-cyan">Innovation</span>
+          <span class="tag tag-blue">Community</span>
+          <span class="tag tag-cyan">Tech</span>
+          <span class="tag tag-blue">Leadership</span>
+          <span class="tag tag-cyan">Design</span>
+        </div>
+        <button class="btn btn-cyan btn-lg">See All Features →</button>
+      </div>
+      <div class="guide-visual">
+        <div style="font-size:0.78rem;color:var(--neutral-lighter);text-transform:uppercase;letter-spacing:1px;margin-bottom:18px;">Key Metrics — Week 23</div>
+        <div class="guide-kpi-row">
+          <div class="kpi-cell">
+            <div class="kpi-cell-label">New Members</div>
+            <div class="kpi-cell-val green">+1,042</div>
+          </div>
+          <div class="kpi-cell">
+            <div class="kpi-cell-label">Projects Launched</div>
+            <div class="kpi-cell-val cyan">+147</div>
+          </div>
+        </div>
+        <div class="guide-kpi-row">
+          <div class="kpi-cell">
+            <div class="kpi-cell-label">Mentor Sessions</div>
+            <div class="kpi-cell-val">384</div>
+          </div>
+          <div class="kpi-cell">
+            <div class="kpi-cell-label">Community Score</div>
+            <div class="kpi-cell-val green">4.8 / 5</div>
+          </div>
+        </div>
+        <div style="background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.18);border-radius:12px;padding:16px;margin-top:4px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+            <div style="width:8px;height:8px;background:var(--cyan);border-radius:50%;animation:pulse 2s ease-in-out infinite;"></div>
+            <span style="font-size:0.8rem;font-weight:700;color:var(--cyan);">AI Recommendation</span>
+          </div>
+          <p style="font-size:0.82rem;color:var(--neutral-light);margin:0;line-height:1.55;">
+            Mentorship matching rates dropped 4% this week. Consider promoting open mentor slots to members who joined in the last 30 days — they convert at 3× the average rate.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FINAL CTA SECTION ─── -->
+  <section class="final-cta-section">
+    <div class="final-cta-inner">
+      <div class="section-label" style="justify-content:center;margin-bottom:20px;">
+        Start Today
+      </div>
+      <h2 class="section-h2" style="text-align:center;">
+        Your goals. Your community.<br/>Your limits, broken.
+      </h2>
+      <p class="section-sub" style="text-align:center;margin:0 auto 36px;">
+        Join 52,341+ builders already pushing beyond what they thought was possible. No credit card required.
+      </p>
+      <div class="final-cta-form">
+        <input type="email" class="email-input" placeholder="your@email.com" />
+        <button class="btn btn-cyan btn-lg">Join Now →</button>
+      </div>
+      <p class="final-note">Free 14-day trial · No credit card · Cancel anytime</p>
+    </div>
+  </section>
+
+  <!-- ─── DARK BAND ─── -->
+  <div class="dark-band">
+    <div class="dark-band-inner">
+      <h2>Ready to Build Beyond Limits?</h2>
+      <p>ENDO gets you up and running in minutes. Your first breakthrough within the hour.</p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn btn-cyan btn-lg">Free 14-Day Trial →</button>
+        <button class="btn btn-outline-white btn-lg">Talk to the Team</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── FOOTER ─── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="#" class="footer-logo">
+            <img src="brand_assets/AIS.png" alt="ENDO logo" />
+            <span class="footer-logo-text">ENDO</span>
+          </a>
+          <p>The community for builders who refuse to settle. Build beyond limits, together.</p>
+        </div>
+        <div>
+          <div class="footer-col-title">Platform</div>
+          <ul class="footer-links">
+            <li><a href="#">Features</a></li>
+            <li><a href="#">Integrations</a></li>
+            <li><a href="#">Pricing</a></li>
+            <li><a href="#">Changelog</a></li>
+            <li><a href="#">Roadmap</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-title">Resources</div>
+          <ul class="footer-links">
+            <li><a href="#">Documentation</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Guides</a></li>
+            <li><a href="#">API</a></li>
+            <li><a href="#">Status</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-title">Company</div>
+          <ul class="footer-links">
+            <li><a href="#">About</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Legal</a></li>
+            <li><a href="#">Privacy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">© 2026 EndoGeniety Society. All rights reserved.</span>
+        <div class="footer-social">
+          <div class="social-btn" title="Twitter/X">𝕏</div>
+          <div class="social-btn" title="LinkedIn">in</div>
+          <div class="social-btn" title="GitHub">⌥</div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ─── WebGL Shader Background ─── -->
+  <script>
+  (function () {
+    var canvas = document.getElementById('shader-bg');
+    if (!canvas) return;
+    var gl = canvas.getContext('webgl');
+    if (!gl) return;
+
+    var vsSource = [
+      'attribute vec4 aVertexPosition;',
+      'void main(){gl_Position=aVertexPosition;}'
+    ].join('\n');
+
+    var fsSource = [
+      'precision highp float;',
+      'uniform vec2 iResolution;',
+      'uniform float iTime;',
+
+      'const float overallSpeed    = 0.2;',
+      'const float gridSmoothWidth = 0.015;',
+      'const float axisWidth       = 0.05;',
+      'const float majorLineWidth  = 0.025;',
+      'const float minorLineWidth  = 0.0125;',
+      'const float majorLineFreq   = 5.0;',
+      'const float minorLineFreq   = 1.0;',
+      'const float scale           = 5.0;',
+      /* Brand cyan #00D4FF → (0.0, 0.831, 1.0) */
+      'const vec4  lineColor       = vec4(0.0, 0.831, 1.0, 1.0);',
+      'const float minLineWidth    = 0.01;',
+      'const float maxLineWidth    = 0.18;',
+      'const float lineSpeed       = 1.0  * overallSpeed;',
+      'const float lineAmplitude   = 1.0;',
+      'const float lineFrequency   = 0.2;',
+      'const float warpSpeed       = 0.2  * overallSpeed;',
+      'const float warpFrequency   = 0.5;',
+      'const float warpAmplitude   = 1.0;',
+      'const float offsetFrequency = 0.5;',
+      'const float offsetSpeed     = 1.33 * overallSpeed;',
+      'const float minOffsetSpread = 0.6;',
+      'const float maxOffsetSpread = 2.0;',
+      'const int   linesPerGroup   = 16;',
+
+      '#define drawSmoothLine(pos,hw,t) smoothstep(hw,0.0,abs(pos-(t)))',
+      '#define drawCrispLine(pos,hw,t)  smoothstep(hw+gridSmoothWidth,hw,abs(pos-(t)))',
+      '#define drawPeriodicLine(freq,w,t) drawCrispLine(freq/2.0,w,abs(mod(t,freq)-(freq)/2.0))',
+      '#define drawCircle(pos,r,coord)  smoothstep(r+gridSmoothWidth,r,length(coord-(pos)))',
+
+      'float random(float t){',
+      '  return (cos(t)+cos(t*1.3+1.3)+cos(t*1.4+1.4))/3.0;',
+      '}',
+
+      'float getPlasmaY(float x,float hFade,float offset){',
+      '  return random(x*lineFrequency+iTime*lineSpeed)*hFade*lineAmplitude+offset;',
+      '}',
+
+      'void main(){',
+      '  vec2 uv    = gl_FragCoord.xy/iResolution.xy;',
+      '  vec2 space = (gl_FragCoord.xy-iResolution.xy/2.0)/iResolution.x*2.0*scale;',
+
+      '  float hFade = 1.0-(cos(uv.x*6.28)*0.5+0.5);',
+      '  float vFade = 1.0-(cos(uv.y*6.28)*0.5+0.5);',
+
+      '  space.y += random(space.x*warpFrequency+iTime*warpSpeed)*warpAmplitude*(0.5+hFade);',
+      '  space.x += random(space.y*warpFrequency+iTime*warpSpeed+2.0)*warpAmplitude*hFade;',
+
+      '  vec4 lines = vec4(0.0);',
+      /* Brand-matched dark backgrounds */
+      '  vec4 bgColor1 = vec4(0.020, 0.020, 0.063, 1.0);',  /* ~#050510 */
+      '  vec4 bgColor2 = vec4(0.027, 0.047, 0.110, 1.0);',  /* ~#071228 */
+
+      '  for(int l=0;l<linesPerGroup;l++){',
+      '    float nli            = float(l)/float(linesPerGroup);',
+      '    float offsetTime     = iTime*offsetSpeed;',
+      '    float offsetPosition = float(l)+space.x*offsetFrequency;',
+      '    float rand           = random(offsetPosition+offsetTime)*0.5+0.5;',
+      '    float halfWidth      = mix(minLineWidth,maxLineWidth,rand*hFade)/2.0;',
+      '    float offset         = random(offsetPosition+offsetTime*(1.0+nli))*mix(minOffsetSpread,maxOffsetSpread,hFade);',
+      '    float linePos        = getPlasmaY(space.x,hFade,offset);',
+      '    float line           = drawSmoothLine(linePos,halfWidth,space.y)/2.0',
+      '                         + drawCrispLine(linePos,halfWidth*0.15,space.y);',
+      '    float cx             = mod(float(l)+iTime*lineSpeed,25.0)-12.0;',
+      '    vec2  cpos           = vec2(cx,getPlasmaY(cx,hFade,offset));',
+      '    float circle         = drawCircle(cpos,0.01,space)*4.0;',
+      '    line                += circle;',
+      '    lines               += line*lineColor*rand;',
+      '  }',
+
+      '  vec4 col  = mix(bgColor1,bgColor2,uv.x);',
+      '  col      *= vFade;',
+      '  col.a     = 1.0;',
+      '  col      += lines;',
+      '  gl_FragColor = col;',
+      '}'
+    ].join('\n');
+
+    function loadShader(gl, type, src) {
+      var s = gl.createShader(type);
+      gl.shaderSource(s, src);
+      gl.compileShader(s);
+      if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+        console.error('Shader:', gl.getShaderInfoLog(s));
+        gl.deleteShader(s); return null;
+      }
+      return s;
+    }
+
+    var vs   = loadShader(gl, gl.VERTEX_SHADER,   vsSource);
+    var fs   = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
+    var prog = gl.createProgram();
+    gl.attachShader(prog, vs);
+    gl.attachShader(prog, fs);
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+      console.error('Program:', gl.getProgramInfoLog(prog)); return;
+    }
+
+    var buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+
+    var posLoc  = gl.getAttribLocation(prog,  'aVertexPosition');
+    var resLoc  = gl.getUniformLocation(prog, 'iResolution');
+    var timeLoc = gl.getUniformLocation(prog, 'iTime');
+
+    var section = canvas.parentElement;
+
+    function resize() {
+      canvas.width  = section.offsetWidth;
+      canvas.height = section.offsetHeight;
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    var t0 = Date.now();
+    function render() {
+      var t = (Date.now() - t0) / 1000;
+      gl.clearColor(0, 0, 0, 1);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.useProgram(prog);
+      gl.uniform2f(resLoc, canvas.width, canvas.height);
+      gl.uniform1f(timeLoc, t);
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+      gl.enableVertexAttribArray(posLoc);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      requestAnimationFrame(render);
+    }
+    render();
+  })();
+  </script>
+
+  <script>
+  (function () {
+    var svg        = document.getElementById('eye-svg');
+    var pOuter     = document.getElementById('pupil-outer');
+    var pRing      = document.getElementById('pupil-ring');
+    var pInner     = document.getElementById('pupil-inner');
+    var gA         = document.getElementById('glint-a');
+    var gB         = document.getElementById('glint-b');
+    var gC         = document.getElementById('glint-c');
+    var hudAngle   = document.getElementById('hud-angle');
+    var hudDist    = document.getElementById('hud-dist');
+    var readout    = document.getElementById('eye-readout');
+
+    var CX = 300, CY = 170;   // iris centre in SVG viewBox units
+    var MAX = 50;              // max pupil travel (SVG units)
+
+    var targetX = CX, targetY = CY;
+    var currX   = CX, currY   = CY;
+
+    // ── Cursor tracking ──────────────────────────────────────
+    document.addEventListener('mousemove', function (e) {
+      var rect = svg.getBoundingClientRect();
+      if (!rect.width) return;
+
+      // Map screen coords → SVG viewBox coords
+      var svgX = (e.clientX - rect.left)  * (600 / rect.width);
+      var svgY = (e.clientY - rect.top)   * (340 / rect.height);
+
+      var dx    = svgX - CX;
+      var dy    = svgY - CY;
+      var dist  = Math.sqrt(dx * dx + dy * dy);
+      var angle = Math.atan2(dy, dx);
+      var t     = Math.min(dist / 230, 1);   // normalise, clamp to 1
+
+      targetX = CX + Math.cos(angle) * t * MAX;
+      targetY = CY + Math.sin(angle) * t * MAX;
+
+      // HUD updates
+      var deg    = Math.round(((angle * 180 / Math.PI) + 360) % 360);
+      var padded = ('000' + deg).slice(-3);
+      var screenDist = Math.round(Math.sqrt(
+        Math.pow(e.clientX - (rect.left + rect.width  / 2), 2) +
+        Math.pow(e.clientY - (rect.top  + rect.height / 2), 2)
+      ));
+      if (hudAngle) hudAngle.textContent = '∠ ' + padded + '°';
+      if (hudDist)  hudDist.textContent  = screenDist + 'px';
+      if (readout)  readout.textContent  = deg + '° · ' + screenDist + 'px';
+    });
+
+    // ── Smooth animation loop (lerp) ─────────────────────────
+    function tick() {
+      currX += (targetX - currX) * 0.11;
+      currY += (targetY - currY) * 0.11;
+
+      var cx = currX, cy = currY;
+
+      pOuter.setAttribute('cx', cx);  pOuter.setAttribute('cy', cy);
+      pRing .setAttribute('cx', cx);  pRing .setAttribute('cy', cy);
+      pInner.setAttribute('cx', cx);  pInner.setAttribute('cy', cy);
+
+      // Glints travel with the pupil
+      gA.setAttribute('cx', cx + 17);  gA.setAttribute('cy', cy - 17);
+      gB.setAttribute('cx', cx + 28);  gB.setAttribute('cy', cy - 6);
+      gC.setAttribute('cx', cx - 11);  gC.setAttribute('cy', cy + 14);
+
+      requestAnimationFrame(tick);
+    }
+    tick();
+
+    // ── Blink scheduler ──────────────────────────────────────
+    function doBlink() {
+      svg.classList.add('blinking');
+      setTimeout(function () {
+        svg.classList.remove('blinking');
+      }, 130);
+      setTimeout(doBlink, 3200 + Math.random() * 4800);
+    }
+    setTimeout(doBlink, 1800 + Math.random() * 2000);
+  })();
+  </script>
+</body>
+</html>

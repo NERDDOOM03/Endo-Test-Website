@@ -1,0 +1,8 @@
+node_modules/
+.env
+credentials.json
+token.json
+.tmp/
+temporary screenshots/
+.DS_Store
+.claude/
