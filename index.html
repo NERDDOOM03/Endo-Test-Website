@@ -2080,7 +2080,7 @@
     </div>
   </footer>
 
-  <!-- ─── Sparkle Particle Background ─── -->
+  <!-- ─── Sparkle + Ripple Background ─── -->
   <script>
   (function () {
     var canvas  = document.getElementById('sparkle-canvas');
@@ -2088,43 +2088,68 @@
     var ctx     = canvas.getContext('2d');
     var section = canvas.parentElement.parentElement;
     var W = 0, H = 0;
-    var COUNT   = 110;
-    var particles = [];
 
     function resize() {
       W = canvas.width  = section.offsetWidth;
       H = canvas.height = section.offsetHeight;
     }
-
-    function Particle() {
-      this.x  = Math.random() * W;
-      this.y  = Math.random() * H;
-      this.r  = Math.random() * 1.2 + 0.3;
-      this.vx = (Math.random() - 0.5) * 0.25;
-      this.vy = (Math.random() - 0.5) * 0.25;
-      this.op = Math.random();
-      this.dop = (Math.random() * 0.006 + 0.002) * (Math.random() > 0.5 ? 1 : -1);
-      // small fraction are slightly larger and brighter
-      if (Math.random() < 0.12) { this.r = Math.random() * 1.8 + 1.2; this.bright = true; }
-    }
-
-    Particle.prototype.step = function () {
-      this.x  += this.vx;
-      this.y  += this.vy;
-      this.op += this.dop;
-      if (this.op >= 1)  { this.op = 1;  this.dop = -Math.abs(this.dop); }
-      if (this.op <= 0)  { this.op = 0;  this.dop =  Math.abs(this.dop); }
-      if (this.x < -4 || this.x > W + 4 || this.y < -4 || this.y > H + 4) {
-        this.x = Math.random() * W;
-        this.y = Math.random() * H;
-      }
-    };
-
     resize();
-    for (var i = 0; i < COUNT; i++) particles.push(new Particle());
     window.addEventListener('resize', resize);
 
-    var active = false, rafId = null, last = 0, MS = 1000 / 48;
+    /* ── Particles ── */
+    var COUNT = 130;
+    var dots  = [];
+    for (var i = 0; i < COUNT; i++) dots.push(makeDot());
+
+    function makeDot() {
+      var bright = Math.random() < 0.15;
+      return {
+        x:   Math.random() * W,
+        y:   Math.random() * H,
+        r:   bright ? Math.random() * 1.6 + 1.2 : Math.random() * 1.1 + 0.4,
+        vx:  (Math.random() - 0.5) * 0.9,
+        vy:  (Math.random() - 0.5) * 0.9,
+        op:  Math.random(),
+        dop: (Math.random() * 0.018 + 0.008) * (Math.random() > 0.5 ? 1 : -1),
+        bright: bright
+      };
+    }
+
+    function stepDot(p) {
+      p.x  += p.vx;
+      p.y  += p.vy;
+      p.op += p.dop;
+      if (p.op >= 1)  { p.op = 1;  p.dop = -Math.abs(p.dop); }
+      if (p.op <= 0)  { p.op = 0;  p.dop =  Math.abs(p.dop); }
+      if (p.x < -5 || p.x > W + 5 || p.y < -5 || p.y > H + 5) {
+        p.x = Math.random() * W;
+        p.y = Math.random() * H;
+      }
+    }
+
+    /* ── Ripples ── */
+    var ripples = [];
+    var RIPPLE_INTERVAL = 1800; // ms between new ripples
+    var lastRipple = 0;
+
+    function spawnRipple() {
+      ripples.push({
+        x:    W * 0.15 + Math.random() * W * 0.7,
+        y:    H * 0.15 + Math.random() * H * 0.7,
+        r:    0,
+        maxR: 80 + Math.random() * 100,
+        op:   0.55,
+        speed: 1.2 + Math.random() * 1.0
+      });
+    }
+
+    function stepRipple(rp) {
+      rp.r  += rp.speed;
+      rp.op  = 0.55 * (1 - rp.r / rp.maxR);
+    }
+
+    /* ── Render loop ── */
+    var active = false, rafId = null, last = 0;
 
     var obs = new IntersectionObserver(function (e) {
       active = e[0].isIntersecting;
@@ -2133,35 +2158,62 @@
     obs.observe(canvas);
 
     document.addEventListener('visibilitychange', function () {
-      if (document.hidden) { active = false; }
-      else { active = true; if (!rafId) rafId = requestAnimationFrame(draw); }
+      active = !document.hidden;
+      if (active && !rafId) rafId = requestAnimationFrame(draw);
     });
 
     function draw(now) {
       rafId = null;
       if (!active) return;
-      if (now - last < MS) { rafId = requestAnimationFrame(draw); return; }
+      var dt = now - last;
       last = now;
 
       ctx.clearRect(0, 0, W, H);
 
-      for (var i = 0; i < particles.length; i++) {
-        var p = particles[i];
-        p.step();
+      /* spawn ripple on interval */
+      if (now - lastRipple > RIPPLE_INTERVAL) {
+        spawnRipple();
+        lastRipple = now;
+      }
+
+      /* draw ripples */
+      for (var i = ripples.length - 1; i >= 0; i--) {
+        var rp = ripples[i];
+        stepRipple(rp);
+        if (rp.op <= 0.01) { ripples.splice(i, 1); continue; }
+
+        ctx.beginPath();
+        ctx.arc(rp.x, rp.y, rp.r, 0, 6.283);
+        ctx.strokeStyle = 'rgba(0,212,255,' + rp.op.toFixed(3) + ')';
+        ctx.lineWidth   = 1.2;
+        ctx.stroke();
+
+        /* second inner ring, slightly behind */
+        if (rp.r > 14) {
+          ctx.beginPath();
+          ctx.arc(rp.x, rp.y, rp.r - 12, 0, 6.283);
+          ctx.strokeStyle = 'rgba(0,160,255,' + (rp.op * 0.45).toFixed(3) + ')';
+          ctx.lineWidth   = 0.7;
+          ctx.stroke();
+        }
+      }
+
+      /* draw dots */
+      for (var j = 0; j < dots.length; j++) {
+        var p = dots[j];
+        stepDot(p);
 
         if (p.bright) {
-          // larger particle — soft glow halo
-          var g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 3);
-          g.addColorStop(0,   'rgba(0,212,255,' + (p.op * 0.9).toFixed(2) + ')');
-          g.addColorStop(0.4, 'rgba(0,180,255,' + (p.op * 0.4).toFixed(2) + ')');
-          g.addColorStop(1,   'rgba(0,102,255,0)');
+          var g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 3.5);
+          g.addColorStop(0,   'rgba(0,212,255,' + (p.op * 0.85).toFixed(2) + ')');
+          g.addColorStop(0.5, 'rgba(0,160,255,' + (p.op * 0.25).toFixed(2) + ')');
+          g.addColorStop(1,   'rgba(0,80,255,0)');
           ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r * 3, 0, 6.283);
+          ctx.arc(p.x, p.y, p.r * 3.5, 0, 6.283);
           ctx.fillStyle = g;
           ctx.fill();
         }
 
-        // core dot
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, 6.283);
         ctx.fillStyle = 'rgba(0,212,255,' + p.op.toFixed(2) + ')';
