@@ -1945,7 +1945,7 @@
     ].join('\n');
 
     var fsSource = [
-      'precision highp float;',
+      'precision mediump float;',
       'uniform vec2 iResolution;',
       'uniform float iTime;',
 
@@ -1971,7 +1971,7 @@
       'const float offsetSpeed     = 1.33 * overallSpeed;',
       'const float minOffsetSpread = 0.6;',
       'const float maxOffsetSpread = 2.0;',
-      'const int   linesPerGroup   = 16;',
+      'const int   linesPerGroup   = 10;',
 
       '#define drawSmoothLine(pos,hw,t) smoothstep(hw,0.0,abs(pos-(t)))',
       '#define drawCrispLine(pos,hw,t)  smoothstep(hw+gridSmoothWidth,hw,abs(pos-(t)))',
@@ -2056,17 +2056,53 @@
     var timeLoc = gl.getUniformLocation(prog, 'iTime');
 
     var section = canvas.parentElement;
+    var DPR = Math.min(window.devicePixelRatio || 1, 1.5); // cap resolution
 
     function resize() {
-      canvas.width  = section.offsetWidth;
-      canvas.height = section.offsetHeight;
+      var w = section.offsetWidth;
+      var h = section.offsetHeight;
+      canvas.width  = Math.floor(w * DPR * 0.75); // render at 75% res, GPU saves ~44%
+      canvas.height = Math.floor(h * DPR * 0.75);
+      canvas.style.width  = w + 'px';
+      canvas.style.height = h + 'px';
       gl.viewport(0, 0, canvas.width, canvas.height);
     }
     window.addEventListener('resize', resize);
     resize();
 
-    var t0 = Date.now();
-    function render() {
+    var t0       = Date.now();
+    var visible  = true;
+    var rafId    = null;
+    var lastFrame = 0;
+    var FPS_CAP  = 30;
+    var FRAME_MS = 1000 / FPS_CAP;
+
+    // Pause when scrolled out of view
+    var observer = new IntersectionObserver(function(entries) {
+      visible = entries[0].isIntersecting;
+      if (visible && !rafId) rafId = requestAnimationFrame(render);
+    }, { threshold: 0.01 });
+    observer.observe(canvas);
+
+    // Pause when tab is hidden
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) {
+        visible = false;
+      } else {
+        visible = true;
+        if (!rafId) rafId = requestAnimationFrame(render);
+      }
+    });
+
+    function render(now) {
+      rafId = null;
+      if (!visible) return;
+      now = now || performance.now();
+      if (now - lastFrame < FRAME_MS) {
+        rafId = requestAnimationFrame(render);
+        return;
+      }
+      lastFrame = now;
       var t = (Date.now() - t0) / 1000;
       gl.clearColor(0, 0, 0, 1);
       gl.clear(gl.COLOR_BUFFER_BIT);
@@ -2077,9 +2113,9 @@
       gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
       gl.enableVertexAttribArray(posLoc);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-      requestAnimationFrame(render);
+      rafId = requestAnimationFrame(render);
     }
-    render();
+    rafId = requestAnimationFrame(render);
   })();
   </script>
 
