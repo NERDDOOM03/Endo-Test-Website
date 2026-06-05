@@ -586,6 +586,8 @@
       inset: 0;
       width: 100%;
       height: 100%;
+      pointer-events: auto;
+      cursor: crosshair;
     }
 
     .stats-inner {
@@ -2127,29 +2129,87 @@
       }
     }
 
-    /* ── Ripples ── */
+    /* ── Ripple system ── */
+    /* Each ripple spawns 4 concentric rings with staggered delays, like real water */
     var ripples = [];
-    var RIPPLE_INTERVAL = 1800; // ms between new ripples
-    var lastRipple = 0;
+    var RIPPLE_INTERVAL = 2400;
+    var lastAutoRipple  = 0;
 
-    function spawnRipple() {
-      ripples.push({
-        x:    W * 0.15 + Math.random() * W * 0.7,
-        y:    H * 0.15 + Math.random() * H * 0.7,
-        r:    0,
-        maxR: 80 + Math.random() * 100,
-        op:   0.55,
-        speed: 1.2 + Math.random() * 1.0
-      });
+    function spawnRipple(x, y, isClick) {
+      var maxR  = isClick ? 220 + Math.random() * 80 : 130 + Math.random() * 70;
+      var speed = isClick ? 3.2 + Math.random() * 1.2 : 1.8 + Math.random() * 0.8;
+      var RINGS = isClick ? 5 : 3;
+      var gap   = isClick ? 28 : 20;
+      for (var k = 0; k < RINGS; k++) {
+        (function(delay, ringIdx) {
+          var obj = {
+            x: x, y: y,
+            r: -delay,          /* starts negative so rings appear staggered */
+            maxR: maxR - ringIdx * 18,
+            speed: speed,
+            lineW: isClick ? (2.4 - ringIdx * 0.35) : (1.8 - ringIdx * 0.3),
+            birthOp: isClick ? (0.9 - ringIdx * 0.12) : (0.7 - ringIdx * 0.12),
+            dead: false
+          };
+          ripples.push(obj);
+        })(k * gap, k);
+      }
     }
 
-    function stepRipple(rp) {
-      rp.r  += rp.speed;
-      rp.op  = 0.55 * (1 - rp.r / rp.maxR);
+    /* Auto-ripple at intervals */
+    var AUTO_INTERVAL = 2400;
+    var lastAuto = 0;
+
+    /* Mouse click → big ripple at cursor */
+    canvas.addEventListener('click', function (e) {
+      var rect = canvas.getBoundingClientRect();
+      spawnRipple(e.clientX - rect.left, e.clientY - rect.top, true);
+    });
+
+    /* Passive mouse move → subtle micro-ripple every 600ms while over canvas */
+    var lastMove = 0;
+    canvas.addEventListener('mousemove', function (e) {
+      var now = performance.now();
+      if (now - lastMove < 600) return;
+      lastMove = now;
+      var rect = canvas.getBoundingClientRect();
+      spawnRipple(e.clientX - rect.left, e.clientY - rect.top, false);
+    }, { passive: true });
+
+    function drawRipple(rp) {
+      if (rp.r <= 0) return; /* not yet born */
+      var progress = rp.r / rp.maxR;
+      if (progress >= 1) { rp.dead = true; return; }
+
+      /* Opacity: fast rise, slow fade — like real water surface */
+      var op = rp.birthOp * Math.sin(progress * Math.PI);
+
+      /* Outer glow — wide, faint */
+      ctx.beginPath();
+      ctx.arc(rp.x, rp.y, rp.r, 0, 6.2832);
+      ctx.strokeStyle = 'rgba(0,212,255,' + (op * 0.35).toFixed(3) + ')';
+      ctx.lineWidth   = rp.lineW * 4;
+      ctx.stroke();
+
+      /* Main bright ring */
+      ctx.beginPath();
+      ctx.arc(rp.x, rp.y, rp.r, 0, 6.2832);
+      ctx.strokeStyle = 'rgba(0,220,255,' + op.toFixed(3) + ')';
+      ctx.lineWidth   = rp.lineW;
+      ctx.stroke();
+
+      /* Inner highlight — thin bright edge */
+      if (rp.r > 8) {
+        ctx.beginPath();
+        ctx.arc(rp.x, rp.y, rp.r - rp.lineW * 1.5, 0, 6.2832);
+        ctx.strokeStyle = 'rgba(180,240,255,' + (op * 0.5).toFixed(3) + ')';
+        ctx.lineWidth   = rp.lineW * 0.4;
+        ctx.stroke();
+      }
     }
 
     /* ── Render loop ── */
-    var active = false, rafId = null, last = 0;
+    var active = false, rafId = null;
 
     var obs = new IntersectionObserver(function (e) {
       active = e[0].isIntersecting;
@@ -2165,37 +2225,25 @@
     function draw(now) {
       rafId = null;
       if (!active) return;
-      var dt = now - last;
-      last = now;
 
       ctx.clearRect(0, 0, W, H);
 
-      /* spawn ripple on interval */
-      if (now - lastRipple > RIPPLE_INTERVAL) {
-        spawnRipple();
-        lastRipple = now;
+      /* auto-spawn ambient ripples */
+      if (now - lastAuto > AUTO_INTERVAL) {
+        spawnRipple(
+          W * 0.1 + Math.random() * W * 0.8,
+          H * 0.1 + Math.random() * H * 0.8,
+          false
+        );
+        lastAuto = now;
       }
 
-      /* draw ripples */
+      /* advance + draw ripples */
       for (var i = ripples.length - 1; i >= 0; i--) {
         var rp = ripples[i];
-        stepRipple(rp);
-        if (rp.op <= 0.01) { ripples.splice(i, 1); continue; }
-
-        ctx.beginPath();
-        ctx.arc(rp.x, rp.y, rp.r, 0, 6.283);
-        ctx.strokeStyle = 'rgba(0,212,255,' + rp.op.toFixed(3) + ')';
-        ctx.lineWidth   = 1.2;
-        ctx.stroke();
-
-        /* second inner ring, slightly behind */
-        if (rp.r > 14) {
-          ctx.beginPath();
-          ctx.arc(rp.x, rp.y, rp.r - 12, 0, 6.283);
-          ctx.strokeStyle = 'rgba(0,160,255,' + (rp.op * 0.45).toFixed(3) + ')';
-          ctx.lineWidth   = 0.7;
-          ctx.stroke();
-        }
+        rp.r += rp.speed;
+        if (rp.dead) { ripples.splice(i, 1); continue; }
+        drawRipple(rp);
       }
 
       /* draw dots */
@@ -2209,13 +2257,13 @@
           g.addColorStop(0.5, 'rgba(0,160,255,' + (p.op * 0.25).toFixed(2) + ')');
           g.addColorStop(1,   'rgba(0,80,255,0)');
           ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r * 3.5, 0, 6.283);
+          ctx.arc(p.x, p.y, p.r * 3.5, 0, 6.2832);
           ctx.fillStyle = g;
           ctx.fill();
         }
 
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, 6.283);
+        ctx.arc(p.x, p.y, p.r, 0, 6.2832);
         ctx.fillStyle = 'rgba(0,212,255,' + p.op.toFixed(2) + ')';
         ctx.fill();
       }
