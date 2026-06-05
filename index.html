@@ -573,6 +573,76 @@
       overflow: hidden;
     }
 
+    /* CSS animated wave lines — replaces WebGL shader */
+    .css-waves {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .css-waves::before,
+    .css-waves::after {
+      content: '';
+      position: absolute;
+      left: -50%;
+      width: 200%;
+      border-radius: 40%;
+    }
+    .css-waves::before {
+      height: 420px;
+      bottom: -180px;
+      background: rgba(0, 212, 255, 0.04);
+      animation: wave-drift 12s linear infinite;
+    }
+    .css-waves::after {
+      height: 380px;
+      bottom: -220px;
+      background: rgba(0, 102, 255, 0.05);
+      animation: wave-drift 18s linear infinite reverse;
+    }
+    .wave-line {
+      position: absolute;
+      left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,212,255,0.25), rgba(0,102,255,0.2), transparent);
+      animation: wave-line-move 6s ease-in-out infinite;
+    }
+    .wave-line:nth-child(1) { top: 20%; animation-duration: 7s; animation-delay: 0s; }
+    .wave-line:nth-child(2) { top: 40%; animation-duration: 9s; animation-delay: -2s; opacity: 0.6; }
+    .wave-line:nth-child(3) { top: 60%; animation-duration: 6s; animation-delay: -4s; opacity: 0.4; }
+    .wave-line:nth-child(4) { top: 80%; animation-duration: 11s; animation-delay: -1s; opacity: 0.3; }
+    .wave-glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      animation: glow-pulse 5s ease-in-out infinite;
+    }
+    .wave-glow-1 {
+      width: 500px; height: 300px;
+      background: rgba(0,212,255,0.06);
+      top: -80px; left: 10%;
+      animation-delay: 0s;
+    }
+    .wave-glow-2 {
+      width: 400px; height: 250px;
+      background: rgba(0,102,255,0.07);
+      bottom: -60px; right: 15%;
+      animation-delay: -2.5s;
+    }
+    @keyframes wave-drift {
+      0%   { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes wave-line-move {
+      0%, 100% { transform: scaleX(1) translateX(0); opacity: 0.5; }
+      50%       { transform: scaleX(1.08) translateX(2%); opacity: 1; }
+    }
+    @keyframes glow-pulse {
+      0%, 100% { opacity: 0.6; transform: scale(1); }
+      50%       { opacity: 1;   transform: scale(1.1); }
+    }
+
     .stats-inner {
       max-width: 1200px;
       margin: 0 auto;
@@ -1333,6 +1403,141 @@
     .eye-ambient {
       animation: eye-outer-pulse 3.5s ease-in-out infinite;
     }
+
+    /* ─── MODAL ─── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 5, 16, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .modal-box {
+      background: #0D0D22;
+      border: 1px solid rgba(0,212,255,0.2);
+      border-radius: 20px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 480px;
+      position: relative;
+      box-shadow: 0 0 80px rgba(0,212,255,0.1);
+      transform: translateY(20px);
+      transition: transform 0.25s ease;
+    }
+    .modal-overlay.active .modal-box {
+      transform: translateY(0);
+    }
+    .modal-close {
+      position: absolute;
+      top: 16px; right: 20px;
+      background: none;
+      border: none;
+      color: var(--neutral-light);
+      font-size: 1.4rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: color 0.2s;
+    }
+    .modal-close:hover { color: var(--white); }
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+    .modal-sub {
+      font-size: 0.9rem;
+      color: var(--neutral-light);
+      margin-bottom: 28px;
+    }
+    .modal-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .modal-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    .modal-field label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--neutral-light);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .modal-field input,
+    .modal-field textarea {
+      background: rgba(0,212,255,0.04);
+      border: 1px solid rgba(0,212,255,0.15);
+      border-radius: 10px;
+      padding: 12px 14px;
+      color: var(--white);
+      font-size: 0.9rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .modal-field input:focus,
+    .modal-field textarea:focus {
+      border-color: var(--cyan);
+    }
+    .modal-field textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+    .modal-submit {
+      width: 100%;
+      padding: 14px;
+      background: var(--cyan);
+      color: #050510;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: background 0.2s, transform 0.1s;
+      font-family: inherit;
+    }
+    .modal-submit:hover { background: var(--cyan-200); transform: translateY(-1px); }
+    .modal-success {
+      text-align: center;
+      padding: 20px 0;
+      display: none;
+    }
+    .modal-success-icon {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+    }
+    .modal-success h3 {
+      color: var(--white);
+      font-size: 1.2rem;
+      margin-bottom: 6px;
+    }
+    .modal-success p {
+      color: var(--neutral-light);
+      font-size: 0.9rem;
+    }
+    @media (max-width: 540px) {
+      .modal-box { padding: 32px 20px; margin: 16px; }
+      .modal-row { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -1527,10 +1732,14 @@
 
   <!-- ─── STATS SECTION ─── -->
   <section class="stats-section">
-    <!-- WebGL shader background -->
-    <canvas id="shader-bg" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;display:block;"></canvas>
-    <!-- Dark overlay keeps text readable -->
-    <div style="position:absolute;inset:0;z-index:0;background:linear-gradient(135deg,rgba(5,5,16,0.70) 0%,rgba(8,10,24,0.58) 100%);pointer-events:none;"></div>
+    <div class="css-waves">
+      <div class="wave-glow wave-glow-1"></div>
+      <div class="wave-glow wave-glow-2"></div>
+      <div class="wave-line"></div>
+      <div class="wave-line"></div>
+      <div class="wave-line"></div>
+      <div class="wave-line"></div>
+    </div>
     <div class="stats-inner">
       <div class="stats-left">
         <div class="section-label">Results</div>
@@ -1931,13 +2140,11 @@
     </div>
   </footer>
 
-  <!-- ─── WebGL Shader Background ─── -->
+  <!-- WebGL shader removed — replaced with CSS animated waves -->
   <script>
   (function () {
     var canvas = document.getElementById('shader-bg');
-    if (!canvas) return;
-    var gl = canvas.getContext('webgl');
-    if (!gl) return;
+    if (!canvas) return; // canvas no longer exists, script exits immediately
 
     var vsSource = [
       'attribute vec4 aVertexPosition;',
@@ -2220,6 +2427,97 @@
       setTimeout(doBlink, 3200 + Math.random() * 4800);
     }
     setTimeout(doBlink, 1800 + Math.random() * 2000);
+  })();
+  </script>
+
+  <!-- ─── CONTACT MODAL ─── -->
+  <div class="modal-overlay" id="contactModal">
+    <div class="modal-box">
+      <button class="modal-close" id="modalClose" aria-label="Close">&#x2715;</button>
+      <div id="modalForm">
+        <div class="modal-title">Get Started</div>
+        <div class="modal-sub">Join the EndoGeniety Society — we'll be in touch shortly.</div>
+        <form id="contactForm" action="https://formspree.io/f/xzdqznjy" method="POST">
+          <div class="modal-row">
+            <div class="modal-field">
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" name="firstName" placeholder="John" required />
+            </div>
+            <div class="modal-field">
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" name="lastName" placeholder="Doe" required />
+            </div>
+          </div>
+          <div class="modal-field">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="john@example.com" required />
+          </div>
+          <div class="modal-field">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" placeholder="Tell us what you're building or what you're looking for..."></textarea>
+          </div>
+          <button type="submit" class="modal-submit">Send Message →</button>
+        </form>
+      </div>
+      <div class="modal-success" id="modalSuccess">
+        <div class="modal-success-icon">✅</div>
+        <h3>Message Sent!</h3>
+        <p>Thanks for reaching out. We'll get back to you within 24 hours.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function() {
+    var overlay = document.getElementById('contactModal');
+    var closeBtn = document.getElementById('modalClose');
+    var form = document.getElementById('contactForm');
+    var successMsg = document.getElementById('modalSuccess');
+    var formDiv = document.getElementById('modalForm');
+
+    function openModal() {
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Wire up all CTA buttons
+    document.querySelectorAll('.btn-cyan, .btn-outline-white, .btn-outline-cyan').forEach(function(btn) {
+      btn.addEventListener('click', openModal);
+    });
+
+    closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) closeModal();
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // Handle form submission via fetch (no page redirect)
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var data = new FormData(form);
+      fetch(form.action, {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      }).then(function(res) {
+        if (res.ok) {
+          formDiv.style.display = 'none';
+          successMsg.style.display = 'block';
+          setTimeout(function() {
+            closeModal();
+            formDiv.style.display = 'block';
+            successMsg.style.display = 'none';
+            form.reset();
+          }, 3000);
+        }
+      });
+    });
   })();
   </script>
 </body>
