@@ -2138,55 +2138,78 @@
     var targetX = CX, targetY = CY;
     var currX   = CX, currY   = CY;
 
-    // ── Cursor tracking ──────────────────────────────────────
+    // Cache rect, only recalculate on resize (not every mousemove)
+    var cachedRect = null;
+    function getRect() {
+      if (!cachedRect) cachedRect = svg.getBoundingClientRect();
+      return cachedRect;
+    }
+    window.addEventListener('resize', function() { cachedRect = null; });
+
+    // Throttle mousemove — only process once per animation frame
+    var mousePending = false;
     document.addEventListener('mousemove', function (e) {
-      var rect = svg.getBoundingClientRect();
-      if (!rect.width) return;
+      if (mousePending) return;
+      mousePending = true;
+      requestAnimationFrame(function() {
+        mousePending = false;
+        var rect = getRect();
+        if (!rect.width) return;
 
-      // Map screen coords → SVG viewBox coords
-      var svgX = (e.clientX - rect.left)  * (600 / rect.width);
-      var svgY = (e.clientY - rect.top)   * (340 / rect.height);
+        var svgX = (e.clientX - rect.left)  * (600 / rect.width);
+        var svgY = (e.clientY - rect.top)   * (340 / rect.height);
 
-      var dx    = svgX - CX;
-      var dy    = svgY - CY;
-      var dist  = Math.sqrt(dx * dx + dy * dy);
-      var angle = Math.atan2(dy, dx);
-      var t     = Math.min(dist / 230, 1);   // normalise, clamp to 1
+        var dx    = svgX - CX;
+        var dy    = svgY - CY;
+        var dist  = Math.sqrt(dx * dx + dy * dy);
+        var angle = Math.atan2(dy, dx);
+        var t     = Math.min(dist / 230, 1);
 
-      targetX = CX + Math.cos(angle) * t * MAX;
-      targetY = CY + Math.sin(angle) * t * MAX;
+        targetX = CX + Math.cos(angle) * t * MAX;
+        targetY = CY + Math.sin(angle) * t * MAX;
 
-      // HUD updates
-      var deg    = Math.round(((angle * 180 / Math.PI) + 360) % 360);
-      var padded = ('000' + deg).slice(-3);
-      var screenDist = Math.round(Math.sqrt(
-        Math.pow(e.clientX - (rect.left + rect.width  / 2), 2) +
-        Math.pow(e.clientY - (rect.top  + rect.height / 2), 2)
-      ));
-      if (hudAngle) hudAngle.textContent = '∠ ' + padded + '°';
-      if (hudDist)  hudDist.textContent  = screenDist + 'px';
-      if (readout)  readout.textContent  = deg + '° · ' + screenDist + 'px';
+        var deg    = Math.round(((angle * 180 / Math.PI) + 360) % 360);
+        var padded = ('000' + deg).slice(-3);
+        var screenDist = Math.round(Math.sqrt(
+          Math.pow(e.clientX - (rect.left + rect.width  / 2), 2) +
+          Math.pow(e.clientY - (rect.top  + rect.height / 2), 2)
+        ));
+        if (hudAngle) hudAngle.textContent = '∠ ' + padded + '°';
+        if (hudDist)  hudDist.textContent  = screenDist + 'px';
+        if (readout)  readout.textContent  = deg + '° · ' + screenDist + 'px';
+      });
     });
 
-    // ── Smooth animation loop (lerp) ─────────────────────────
-    function tick() {
+    // ── Smooth animation loop (lerp) capped at 30fps ─────────
+    var eyeVisible = true;
+    var eyeObserver = new IntersectionObserver(function(entries) {
+      eyeVisible = entries[0].isIntersecting;
+      if (eyeVisible) requestAnimationFrame(tick);
+    }, { threshold: 0.01 });
+    if (svg) eyeObserver.observe(svg);
+
+    var lastTick = 0;
+    var TICK_MS  = 1000 / 30;
+    function tick(now) {
+      if (!eyeVisible) return;
+      now = now || performance.now();
+      if (now - lastTick < TICK_MS) { requestAnimationFrame(tick); return; }
+      lastTick = now;
+
       currX += (targetX - currX) * 0.11;
       currY += (targetY - currY) * 0.11;
 
       var cx = currX, cy = currY;
-
       pOuter.setAttribute('cx', cx);  pOuter.setAttribute('cy', cy);
       pRing .setAttribute('cx', cx);  pRing .setAttribute('cy', cy);
       pInner.setAttribute('cx', cx);  pInner.setAttribute('cy', cy);
-
-      // Glints travel with the pupil
       gA.setAttribute('cx', cx + 17);  gA.setAttribute('cy', cy - 17);
       gB.setAttribute('cx', cx + 28);  gB.setAttribute('cy', cy - 6);
       gC.setAttribute('cx', cx - 11);  gC.setAttribute('cy', cy + 14);
 
       requestAnimationFrame(tick);
     }
-    tick();
+    requestAnimationFrame(tick);
 
     // ── Blink scheduler ──────────────────────────────────────
     function doBlink() {
