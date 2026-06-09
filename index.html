@@ -687,31 +687,13 @@
       100% { top: calc(100% + 4px); opacity: 0; }
     }
 
-    /* ── Preview card curtain split ── */
+    /* ── Preview card clip-path reveal ── */
     .preview-wrap {
       position: relative;
     }
 
-    .curtain-top,
-    .curtain-bot {
-      position: absolute;
-      left: 0; right: 0;
-      background: #0D0D22;
-      z-index: 10;
-      pointer-events: none;
-      will-change: transform;
-    }
-
-    .curtain-top {
-      top: 0;
-      height: 53%;
-      clip-path: polygon(0 0, 100% 0, 100% 78%, 83% 100%, 65% 82%, 47% 100%, 30% 82%, 12% 100%, 0 82%);
-    }
-
-    .curtain-bot {
-      bottom: 0;
-      height: 53%;
-      clip-path: polygon(0 22%, 12% 0, 30% 18%, 47% 0, 65% 18%, 83% 0, 100% 22%, 100% 100%, 0 100%);
+    .preview-card {
+      will-change: clip-path;
     }
 
     /* Glitch on the big number */
@@ -1940,8 +1922,6 @@
           <div class="preview-row-val">6,847</div>
         </div>
       </div>
-      <div class="curtain-top"></div>
-      <div class="curtain-bot"></div>
       </div>
     </div>
   </section>
@@ -2575,46 +2555,61 @@
   (function () {
     gsap.registerPlugin(ScrollTrigger);
 
-    /* ── Curtain split on preview card ── */
-    /* Both curtains start covering the card, split apart as you scroll in */
-    gsap.set('.curtain-top', { y: '0%' });
-    gsap.set('.curtain-bot', { y: '0%' });
+    /* ─────────────────────────────────────────────────
+       BIG PREVIEW CARD — clip-path tear-open from centre
+       Background sparkles are always visible because
+       there are zero overlay divs blocking them.
+       Works both directions: scroll down = opens,
+       scroll up = zips back shut.
+    ───────────────────────────────────────────────── */
+    var CLOSED = 'polygon(0% 47%, 14% 49%, 28% 47%, 42% 49%, 56% 47%, 70% 49%, 84% 47%, 100% 49%, 100% 51%, 84% 53%, 70% 51%, 56% 53%, 42% 51%, 28% 53%, 14% 51%, 0% 53%)';
+    var OPEN   = 'polygon(0% 0%,  14% 2%,  28% 0%,  42% 2%,  56% 0%,  70% 2%,  84% 0%,  100% 0%,  100% 100%, 84% 98%, 70% 100%, 56% 98%, 42% 100%, 28% 98%, 14% 100%, 0% 100%)';
 
-    var curtainTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: '.preview-wrap',
-        start: 'top 80%',
-        end:   'top 10%',
-        scrub: 1.8
+    gsap.fromTo('.preview-card',
+      { clipPath: CLOSED, opacity: 0.3 },
+      {
+        clipPath: OPEN,
+        opacity: 1,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '.preview-wrap',
+          start: 'top 85%',
+          end:   'top 15%',
+          scrub: 1.6
+        }
       }
-    });
-    curtainTl
-      .to('.curtain-top', { y: '-105%', ease: 'power2.inOut' }, 0)
-      .to('.curtain-bot', { y:  '105%', ease: 'power2.inOut' }, 0);
+    );
 
-    /* ── Small stat cards — scatter from 4 corners ── */
+    /* ─────────────────────────────────────────────────
+       SMALL STAT CARDS — scatter from 4 corners
+       fromTo so GSAP owns both start and end states,
+       which means scrub reverse (scroll up) works
+       perfectly — cards fly back to their corners.
+    ───────────────────────────────────────────────── */
     var cards = document.querySelectorAll('.stat-card');
     if (cards.length >= 4) {
-      /* Set initial scattered positions */
-      gsap.set(cards[0], { x: -90, y: -70, opacity: 0, scale: 0.82 });
-      gsap.set(cards[1], { x:  90, y: -70, opacity: 0, scale: 0.82 });
-      gsap.set(cards[2], { x: -90, y:  70, opacity: 0, scale: 0.82 });
-      gsap.set(cards[3], { x:  90, y:  70, opacity: 0, scale: 0.82 });
+      var origins = [
+        { x: -100, y: -80 },
+        { x:  100, y: -80 },
+        { x: -100, y:  80 },
+        { x:  100, y:  80 }
+      ];
 
-      var cardTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: '.stat-grid',
-          start: 'top 82%',
-          end:   'top 22%',
-          scrub: 1.4
-        }
+      origins.forEach(function (o, i) {
+        gsap.fromTo(cards[i],
+          { x: o.x, y: o.y, opacity: 0, scale: 0.8 },
+          {
+            x: 0, y: 0, opacity: 1, scale: 1,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: '.stat-grid',
+              start: 'top 85%',
+              end:   'top 25%',
+              scrub: 1.2
+            }
+          }
+        );
       });
-
-      cardTl
-        .to(cards[0], { x: 0, y: 0, opacity: 1, scale: 1, ease: 'power3.out' }, 0)
-        .to(cards[1], { x: 0, y: 0, opacity: 1, scale: 1, ease: 'power3.out' }, 0.04)
-        .to(cards[2], { x: 0, y: 0, opacity: 1, scale: 1, ease: 'power3.out' }, 0.08)
-        .to(cards[3], { x: 0, y: 0, opacity: 1, scale: 1, ease: 'power3.out' }, 0.12);
     }
 
   })();
