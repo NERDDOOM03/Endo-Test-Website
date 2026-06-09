@@ -475,6 +475,7 @@
       background: var(--green);
       border-radius: 50%;
       animation: pulse 2s ease-in-out infinite;
+      will-change: transform, opacity;
     }
 
     @keyframes pulse {
@@ -580,6 +581,7 @@
       z-index: 0;
       overflow: hidden;
       pointer-events: none;
+      contain: strict;
     }
     #sparkle-canvas {
       position: absolute;
@@ -588,6 +590,7 @@
       height: 100%;
       pointer-events: auto;
       cursor: crosshair;
+      will-change: transform;
     }
 
     .stats-inner {
@@ -613,12 +616,61 @@
       border: 1px solid var(--card-border);
       border-radius: 16px;
       padding: 24px;
-      transition: border-color .2s;
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      will-change: transform;
+      transition: border-color .15s, box-shadow .25s, transform .1s ease-out;
     }
 
-    .stat-card:hover { border-color: var(--card-border-h); }
+    /* Diagonal sweep light */
+    .stat-card::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -80%;
+      width: 50%;
+      height: 200%;
+      background: linear-gradient(105deg, transparent, rgba(0,212,255,0.1), rgba(255,0,255,0.07), transparent);
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    .stat-card:hover {
+      border-color: rgba(255, 0, 220, 0.55);
+      box-shadow: 0 0 22px rgba(255,0,220,0.18), 0 0 55px rgba(0,212,255,0.1), inset 0 0 24px rgba(0,212,255,0.03);
+    }
+
+    .stat-card:hover::after {
+      animation: card-sweep .55s ease-out forwards;
+    }
+
+    @keyframes card-sweep {
+      from { left: -80%; opacity: 1; }
+      to   { left: 140%; opacity: 0.4; }
+    }
+
+    /* Glitch on the big number */
+    @keyframes stat-glitch {
+      0%   { transform: translate(0); color: var(--cyan); text-shadow: 0 0 20px rgba(0,212,255,0.3); }
+      8%   { transform: translate(-4px,0); color: #FF00FF; text-shadow: 4px 0 #00FFFF, -4px 0 #FF0080; }
+      16%  { transform: translate(4px,0); color: #00FF88; text-shadow: -4px 0 #FF00FF; }
+      24%  { transform: translate(-2px,2px); color: #FF4444; text-shadow: 2px 0 #00FFFF; }
+      32%  { transform: translate(3px,-1px); color: #00FFFF; text-shadow: -3px 0 #FF00FF; }
+      40%  { transform: translate(-3px,0); color: #FF00FF; text-shadow: 3px 0 #00FFFF; }
+      50%  { transform: translate(0); color: var(--cyan); text-shadow: 0 0 30px rgba(0,212,255,0.8); }
+      62%  { transform: translate(2px,-1px); color: #FF00FF; text-shadow: -2px 0 #00FFFF; }
+      74%  { transform: translate(-1px,1px); color: #00FF88; }
+      86%  { transform: translate(1px,0); color: var(--cyan); }
+      100% { transform: translate(0); color: var(--cyan); text-shadow: 0 0 20px rgba(0,212,255,0.3); }
+    }
+
+    .stat-card:hover .stat-num {
+      animation: stat-glitch .5s steps(1) forwards;
+    }
 
     .stat-num {
       font-size: 2rem;
@@ -626,12 +678,86 @@
       color: var(--cyan);
       margin-bottom: 4px;
       text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+      display: inline-block;
     }
 
     .stat-desc {
       font-size: 0.85rem;
       color: var(--neutral-light);
       line-height: 1.4;
+    }
+
+    /* ── Preview row funky hover ── */
+    .preview-row {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .preview-row::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(0,212,255,0.09), rgba(255,0,255,0.05), transparent);
+      left: -120%;
+      pointer-events: none;
+    }
+
+    .preview-row:hover {
+      background: rgba(0,212,255,0.03);
+      cursor: pointer;
+    }
+
+    .preview-row:hover::after {
+      animation: row-flash .4s ease-out forwards;
+    }
+
+    @keyframes row-flash {
+      from { left: -120%; }
+      to   { left: 130%; }
+    }
+
+    .preview-row:hover .preview-row-val {
+      color: #00FFFF;
+      text-shadow: 0 0 12px rgba(0,255,255,0.6), 0 0 24px rgba(255,0,255,0.2);
+      transition: color .15s, text-shadow .15s;
+    }
+
+    /* ── Big number glitch ── */
+    @keyframes big-glitch {
+      0%   { transform: translate(0); color: white; }
+      12%  { transform: translate(-5px,0); color: #FF00FF; text-shadow: 5px 0 #00FFFF, -5px 0 #FF0080; }
+      24%  { transform: translate(5px,0); color: #00FFFF; text-shadow: -5px 0 #FF00FF; }
+      36%  { transform: translate(-3px,2px); color: white; text-shadow: 3px 0 #FF4444; }
+      48%  { transform: translate(3px,-1px); color: #FF4444; text-shadow: -3px 0 #00FFFF; }
+      60%  { transform: translate(0); color: white; text-shadow: 0 0 20px rgba(255,255,255,0.4); }
+      72%  { transform: translate(-2px,0); color: #00FF88; text-shadow: 2px 0 #FF00FF; }
+      84%  { transform: translate(1px,-1px); color: white; }
+      100% { transform: translate(0); color: white; text-shadow: none; }
+    }
+
+    .preview-big {
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .preview-big.glitching {
+      animation: big-glitch .5s steps(1) forwards;
+    }
+
+    /* ── Donut bounce ── */
+    .donut-wrap {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+      cursor: pointer;
+    }
+
+    .donut-wrap svg {
+      transition: transform .35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .donut-wrap:hover svg {
+      transform: rotate(18deg) scale(1.07);
     }
 
     /* Dashboard preview */
@@ -1496,10 +1622,10 @@
       <span class="nav-logo-text">ENDO</span>
     </a>
     <ul class="nav-links">
-      <li><a href="#">Products</a></li>
-      <li><a href="#">Pricing</a></li>
-      <li><a href="#">Community</a></li>
-      <li><a href="#">Blog</a></li>
+      <li><a href="#products">Products</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#community">Community</a></li>
+      <li><a href="#blog">Blog</a></li>
     </ul>
     <div class="nav-actions">
       <button class="btn btn-ghost">Sign In</button>
@@ -1718,7 +1844,7 @@
         <div class="preview-big">52,341</div>
         <div class="preview-label">Total members as of June 3, 2026</div>
 
-        <div style="display:flex;justify-content:center;margin:20px 0;">
+        <div class="donut-wrap">
           <svg width="160" height="160" viewBox="0 0 160 160">
             <circle cx="80" cy="80" r="60" fill="none" stroke="rgba(0,212,255,0.1)" stroke-width="20"/>
             <circle cx="80" cy="80" r="60" fill="none" stroke="#00D4FF" stroke-width="20"
@@ -1756,7 +1882,7 @@
   </section>
 
   <!-- ─── FEATURES GRID ─── -->
-  <section class="features-section">
+  <section class="features-section" id="products">
     <div class="container">
       <div class="features-header">
         <div class="section-label" style="justify-content:center;">Platform</div>
@@ -1834,7 +1960,7 @@
   </section>
 
   <!-- ─── HIGHLIGHT SECTION ─── -->
-  <section class="highlight-section">
+  <section class="highlight-section" id="community">
     <div class="highlight-inner">
       <div class="highlight-left">
         <div class="section-label">Deep Insights</div>
@@ -1945,7 +2071,7 @@
   </section>
 
   <!-- ─── GUIDE SECTION ─── -->
-  <section class="guide-section">
+  <section class="guide-section" id="blog">
     <div class="guide-inner">
       <div class="guide-left">
         <div class="section-label">Built to Guide, Not Just Measure</div>
@@ -1998,7 +2124,7 @@
   </section>
 
   <!-- ─── FINAL CTA SECTION ─── -->
-  <section class="final-cta-section">
+  <section class="final-cta-section" id="pricing">
     <div class="final-cta-inner">
       <div class="section-label" style="justify-content:center;margin-bottom:20px;">
         Start Today
@@ -2098,8 +2224,22 @@
     resize();
     window.addEventListener('resize', resize);
 
+    /* ── Pre-render glow sprite once — reused every frame via drawImage ── */
+    var GLOW_SZ = 44;
+    var glowSprite = document.createElement('canvas');
+    glowSprite.width = glowSprite.height = GLOW_SZ;
+    var gc = glowSprite.getContext('2d');
+    var grd = gc.createRadialGradient(GLOW_SZ/2, GLOW_SZ/2, 0, GLOW_SZ/2, GLOW_SZ/2, GLOW_SZ/2);
+    grd.addColorStop(0,   'rgba(0,212,255,0.85)');
+    grd.addColorStop(0.5, 'rgba(0,160,255,0.25)');
+    grd.addColorStop(1,   'rgba(0,80,255,0)');
+    gc.fillStyle = grd;
+    gc.beginPath();
+    gc.arc(GLOW_SZ/2, GLOW_SZ/2, GLOW_SZ/2, 0, 6.2832);
+    gc.fill();
+
     /* ── Particles ── */
-    var COUNT = 130;
+    var COUNT = 75;
     var dots  = [];
     for (var i = 0; i < COUNT; i++) dots.push(makeDot());
 
@@ -2130,10 +2270,9 @@
     }
 
     /* ── Ripple system ── */
-    /* Each ripple spawns 4 concentric rings with staggered delays, like real water */
     var ripples = [];
-    var RIPPLE_INTERVAL = 2400;
-    var lastAutoRipple  = 0;
+    var AUTO_INTERVAL = 2400;
+    var lastAuto = 0;
 
     function spawnRipple(x, y, isClick) {
       var maxR  = isClick ? 220 + Math.random() * 80 : 130 + Math.random() * 70;
@@ -2142,31 +2281,24 @@
       var gap   = isClick ? 28 : 20;
       for (var k = 0; k < RINGS; k++) {
         (function(delay, ringIdx) {
-          var obj = {
+          ripples.push({
             x: x, y: y,
-            r: -delay,          /* starts negative so rings appear staggered */
+            r: -delay,
             maxR: maxR - ringIdx * 18,
             speed: speed,
             lineW: isClick ? (2.4 - ringIdx * 0.35) : (1.8 - ringIdx * 0.3),
             birthOp: isClick ? (0.9 - ringIdx * 0.12) : (0.7 - ringIdx * 0.12),
             dead: false
-          };
-          ripples.push(obj);
+          });
         })(k * gap, k);
       }
     }
 
-    /* Auto-ripple at intervals */
-    var AUTO_INTERVAL = 2400;
-    var lastAuto = 0;
-
-    /* Mouse click → big ripple at cursor */
     canvas.addEventListener('click', function (e) {
       var rect = canvas.getBoundingClientRect();
       spawnRipple(e.clientX - rect.left, e.clientY - rect.top, true);
     });
 
-    /* Passive mouse move → subtle micro-ripple every 600ms while over canvas */
     var lastMove = 0;
     canvas.addEventListener('mousemove', function (e) {
       var now = performance.now();
@@ -2177,39 +2309,38 @@
     }, { passive: true });
 
     function drawRipple(rp) {
-      if (rp.r <= 0) return; /* not yet born */
+      if (rp.r <= 0) return;
       var progress = rp.r / rp.maxR;
       if (progress >= 1) { rp.dead = true; return; }
-
-      /* Opacity: fast rise, slow fade — like real water surface */
       var op = rp.birthOp * Math.sin(progress * Math.PI);
 
-      /* Outer glow — wide, faint */
+      ctx.globalAlpha = op * 0.35;
       ctx.beginPath();
       ctx.arc(rp.x, rp.y, rp.r, 0, 6.2832);
-      ctx.strokeStyle = 'rgba(0,212,255,' + (op * 0.35).toFixed(3) + ')';
+      ctx.strokeStyle = '#00D4FF';
       ctx.lineWidth   = rp.lineW * 4;
       ctx.stroke();
 
-      /* Main bright ring */
+      ctx.globalAlpha = op;
       ctx.beginPath();
       ctx.arc(rp.x, rp.y, rp.r, 0, 6.2832);
-      ctx.strokeStyle = 'rgba(0,220,255,' + op.toFixed(3) + ')';
+      ctx.strokeStyle = '#00DCFF';
       ctx.lineWidth   = rp.lineW;
       ctx.stroke();
 
-      /* Inner highlight — thin bright edge */
       if (rp.r > 8) {
+        ctx.globalAlpha = op * 0.5;
         ctx.beginPath();
         ctx.arc(rp.x, rp.y, rp.r - rp.lineW * 1.5, 0, 6.2832);
-        ctx.strokeStyle = 'rgba(180,240,255,' + (op * 0.5).toFixed(3) + ')';
+        ctx.strokeStyle = '#B4F0FF';
         ctx.lineWidth   = rp.lineW * 0.4;
         ctx.stroke();
       }
     }
 
-    /* ── Render loop ── */
+    /* ── Render loop — capped at 30fps ── */
     var active = false, rafId = null;
+    var lastFrame = 0, FRAME_MS = 1000 / 30;
 
     var obs = new IntersectionObserver(function (e) {
       active = e[0].isIntersecting;
@@ -2225,20 +2356,17 @@
     function draw(now) {
       rafId = null;
       if (!active) return;
+      if (now - lastFrame < FRAME_MS) { rafId = requestAnimationFrame(draw); return; }
+      lastFrame = now;
 
       ctx.clearRect(0, 0, W, H);
 
-      /* auto-spawn ambient ripples */
       if (now - lastAuto > AUTO_INTERVAL) {
-        spawnRipple(
-          W * 0.1 + Math.random() * W * 0.8,
-          H * 0.1 + Math.random() * H * 0.8,
-          false
-        );
+        spawnRipple(W * 0.1 + Math.random() * W * 0.8, H * 0.1 + Math.random() * H * 0.8, false);
         lastAuto = now;
       }
 
-      /* advance + draw ripples */
+      ctx.globalAlpha = 1;
       for (var i = ripples.length - 1; i >= 0; i--) {
         var rp = ripples[i];
         rp.r += rp.speed;
@@ -2246,217 +2374,28 @@
         drawRipple(rp);
       }
 
-      /* draw dots */
+      /* Draw particles — globalAlpha instead of rgba string-building */
+      ctx.fillStyle = '#00D4FF';
       for (var j = 0; j < dots.length; j++) {
         var p = dots[j];
         stepDot(p);
 
         if (p.bright) {
-          var g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 3.5);
-          g.addColorStop(0,   'rgba(0,212,255,' + (p.op * 0.85).toFixed(2) + ')');
-          g.addColorStop(0.5, 'rgba(0,160,255,' + (p.op * 0.25).toFixed(2) + ')');
-          g.addColorStop(1,   'rgba(0,80,255,0)');
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r * 3.5, 0, 6.2832);
-          ctx.fillStyle = g;
-          ctx.fill();
+          var ds = p.r * 7;
+          ctx.globalAlpha = p.op;
+          ctx.drawImage(glowSprite, p.x - ds/2, p.y - ds/2, ds, ds);
         }
 
+        ctx.globalAlpha = p.op;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, 6.2832);
-        ctx.fillStyle = 'rgba(0,212,255,' + p.op.toFixed(2) + ')';
         ctx.fill();
       }
 
+      ctx.globalAlpha = 1;
       rafId = requestAnimationFrame(draw);
     }
     rafId = requestAnimationFrame(draw);
-  })();
-  </script>
-
-  <!-- WebGL shader removed — replaced with sparkle canvas -->
-  <script>
-  (function () {
-    var canvas = document.getElementById('shader-bg');
-    if (!canvas) return; // canvas no longer exists, script exits immediately
-
-    var vsSource = [
-      'attribute vec4 aVertexPosition;',
-      'void main(){gl_Position=aVertexPosition;}'
-    ].join('\n');
-
-    var fsSource = [
-      'precision mediump float;',
-      'uniform vec2 iResolution;',
-      'uniform float iTime;',
-
-      'const float overallSpeed    = 0.2;',
-      'const float gridSmoothWidth = 0.015;',
-      'const float axisWidth       = 0.05;',
-      'const float majorLineWidth  = 0.025;',
-      'const float minorLineWidth  = 0.0125;',
-      'const float majorLineFreq   = 5.0;',
-      'const float minorLineFreq   = 1.0;',
-      'const float scale           = 5.0;',
-      /* Brand cyan #00D4FF → (0.0, 0.831, 1.0) */
-      'const vec4  lineColor       = vec4(0.0, 0.831, 1.0, 1.0);',
-      'const float minLineWidth    = 0.01;',
-      'const float maxLineWidth    = 0.18;',
-      'const float lineSpeed       = 1.0  * overallSpeed;',
-      'const float lineAmplitude   = 1.0;',
-      'const float lineFrequency   = 0.2;',
-      'const float warpSpeed       = 0.2  * overallSpeed;',
-      'const float warpFrequency   = 0.5;',
-      'const float warpAmplitude   = 1.0;',
-      'const float offsetFrequency = 0.5;',
-      'const float offsetSpeed     = 1.33 * overallSpeed;',
-      'const float minOffsetSpread = 0.6;',
-      'const float maxOffsetSpread = 2.0;',
-      'const int   linesPerGroup   = 10;',
-
-      '#define drawSmoothLine(pos,hw,t) smoothstep(hw,0.0,abs(pos-(t)))',
-      '#define drawCrispLine(pos,hw,t)  smoothstep(hw+gridSmoothWidth,hw,abs(pos-(t)))',
-      '#define drawPeriodicLine(freq,w,t) drawCrispLine(freq/2.0,w,abs(mod(t,freq)-(freq)/2.0))',
-      '#define drawCircle(pos,r,coord)  smoothstep(r+gridSmoothWidth,r,length(coord-(pos)))',
-
-      'float random(float t){',
-      '  return (cos(t)+cos(t*1.3+1.3)+cos(t*1.4+1.4))/3.0;',
-      '}',
-
-      'float getPlasmaY(float x,float hFade,float offset){',
-      '  return random(x*lineFrequency+iTime*lineSpeed)*hFade*lineAmplitude+offset;',
-      '}',
-
-      'void main(){',
-      '  vec2 uv    = gl_FragCoord.xy/iResolution.xy;',
-      '  vec2 space = (gl_FragCoord.xy-iResolution.xy/2.0)/iResolution.x*2.0*scale;',
-
-      '  float hFade = 1.0-(cos(uv.x*6.28)*0.5+0.5);',
-      '  float vFade = 1.0-(cos(uv.y*6.28)*0.5+0.5);',
-
-      '  space.y += random(space.x*warpFrequency+iTime*warpSpeed)*warpAmplitude*(0.5+hFade);',
-      '  space.x += random(space.y*warpFrequency+iTime*warpSpeed+2.0)*warpAmplitude*hFade;',
-
-      '  vec4 lines = vec4(0.0);',
-      /* Brand-matched dark backgrounds */
-      '  vec4 bgColor1 = vec4(0.020, 0.020, 0.063, 1.0);',  /* ~#050510 */
-      '  vec4 bgColor2 = vec4(0.027, 0.047, 0.110, 1.0);',  /* ~#071228 */
-
-      '  for(int l=0;l<linesPerGroup;l++){',
-      '    float nli            = float(l)/float(linesPerGroup);',
-      '    float offsetTime     = iTime*offsetSpeed;',
-      '    float offsetPosition = float(l)+space.x*offsetFrequency;',
-      '    float rand           = random(offsetPosition+offsetTime)*0.5+0.5;',
-      '    float halfWidth      = mix(minLineWidth,maxLineWidth,rand*hFade)/2.0;',
-      '    float offset         = random(offsetPosition+offsetTime*(1.0+nli))*mix(minOffsetSpread,maxOffsetSpread,hFade);',
-      '    float linePos        = getPlasmaY(space.x,hFade,offset);',
-      '    float line           = drawSmoothLine(linePos,halfWidth,space.y)/2.0',
-      '                         + drawCrispLine(linePos,halfWidth*0.15,space.y);',
-      '    float cx             = mod(float(l)+iTime*lineSpeed,25.0)-12.0;',
-      '    vec2  cpos           = vec2(cx,getPlasmaY(cx,hFade,offset));',
-      '    float circle         = drawCircle(cpos,0.01,space)*4.0;',
-      '    line                += circle;',
-      '    lines               += line*lineColor*rand;',
-      '  }',
-
-      '  vec4 col  = mix(bgColor1,bgColor2,uv.x);',
-      '  col      *= vFade;',
-      '  col.a     = 1.0;',
-      '  col      += lines;',
-      '  gl_FragColor = col;',
-      '}'
-    ].join('\n');
-
-    function loadShader(gl, type, src) {
-      var s = gl.createShader(type);
-      gl.shaderSource(s, src);
-      gl.compileShader(s);
-      if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
-        console.error('Shader:', gl.getShaderInfoLog(s));
-        gl.deleteShader(s); return null;
-      }
-      return s;
-    }
-
-    var vs   = loadShader(gl, gl.VERTEX_SHADER,   vsSource);
-    var fs   = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
-    var prog = gl.createProgram();
-    gl.attachShader(prog, vs);
-    gl.attachShader(prog, fs);
-    gl.linkProgram(prog);
-    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
-      console.error('Program:', gl.getProgramInfoLog(prog)); return;
-    }
-
-    var buf = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
-
-    var posLoc  = gl.getAttribLocation(prog,  'aVertexPosition');
-    var resLoc  = gl.getUniformLocation(prog, 'iResolution');
-    var timeLoc = gl.getUniformLocation(prog, 'iTime');
-
-    var section = canvas.parentElement;
-    var DPR = Math.min(window.devicePixelRatio || 1, 1.5); // cap resolution
-
-    function resize() {
-      var w = section.offsetWidth;
-      var h = section.offsetHeight;
-      canvas.width  = Math.floor(w * DPR * 0.75); // render at 75% res, GPU saves ~44%
-      canvas.height = Math.floor(h * DPR * 0.75);
-      canvas.style.width  = w + 'px';
-      canvas.style.height = h + 'px';
-      gl.viewport(0, 0, canvas.width, canvas.height);
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    var t0       = Date.now();
-    var visible  = true;
-    var rafId    = null;
-    var lastFrame = 0;
-    var FPS_CAP  = 30;
-    var FRAME_MS = 1000 / FPS_CAP;
-
-    // Pause when scrolled out of view
-    var observer = new IntersectionObserver(function(entries) {
-      visible = entries[0].isIntersecting;
-      if (visible && !rafId) rafId = requestAnimationFrame(render);
-    }, { threshold: 0.01 });
-    observer.observe(canvas);
-
-    // Pause when tab is hidden
-    document.addEventListener('visibilitychange', function() {
-      if (document.hidden) {
-        visible = false;
-      } else {
-        visible = true;
-        if (!rafId) rafId = requestAnimationFrame(render);
-      }
-    });
-
-    function render(now) {
-      rafId = null;
-      if (!visible) return;
-      now = now || performance.now();
-      if (now - lastFrame < FRAME_MS) {
-        rafId = requestAnimationFrame(render);
-        return;
-      }
-      lastFrame = now;
-      var t = (Date.now() - t0) / 1000;
-      gl.clearColor(0, 0, 0, 1);
-      gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.useProgram(prog);
-      gl.uniform2f(resLoc, canvas.width, canvas.height);
-      gl.uniform1f(timeLoc, t);
-      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-      gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
-      gl.enableVertexAttribArray(posLoc);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-      rafId = requestAnimationFrame(render);
-    }
-    rafId = requestAnimationFrame(render);
   })();
   </script>
 
@@ -2652,6 +2591,68 @@
         }
       });
     });
+  })();
+  </script>
+
+  <!-- ─── FUNKY HOVER INTERACTIONS ─── -->
+  <script>
+  (function () {
+
+    /* ── 3D tilt on stat cards ── */
+    document.querySelectorAll('.stat-card').forEach(function (card) {
+      card.addEventListener('mousemove', function (e) {
+        var r  = card.getBoundingClientRect();
+        var dx = (e.clientX - r.left  - r.width  / 2) / (r.width  / 2);
+        var dy = (e.clientY - r.top   - r.height / 2) / (r.height / 2);
+        card.style.transform = 'perspective(500px) rotateX(' + (-dy * 10) + 'deg) rotateY(' + (dx * 10) + 'deg) scale(1.04)';
+      });
+      card.addEventListener('mouseleave', function () {
+        card.style.transform = '';
+      });
+    });
+
+    /* ── Number scramble on preview rows ── */
+    var DIGITS = '0123456789';
+    function scramble(el, original) {
+      var len   = original.length;
+      var start = performance.now();
+      var dur   = 550;
+      function step(now) {
+        var p       = Math.min((now - start) / dur, 1);
+        var settled = Math.floor(p * p * len); /* ease-in: fast finish */
+        var out = '';
+        for (var i = 0; i < len; i++) {
+          var ch = original[i];
+          if (!/[0-9]/.test(ch)) { out += ch; continue; }
+          out += i < settled ? ch : DIGITS[Math.floor(Math.random() * 10)];
+        }
+        el.textContent = out;
+        if (p < 1) requestAnimationFrame(step);
+        else el.textContent = original;
+      }
+      requestAnimationFrame(step);
+    }
+
+    document.querySelectorAll('.preview-row').forEach(function (row) {
+      var val = row.querySelector('.preview-row-val');
+      if (!val) return;
+      var orig = val.textContent.trim();
+      row.addEventListener('mouseenter', function () { scramble(val, orig); });
+    });
+
+    /* ── Big number glitch on hover ── */
+    var bigNum = document.querySelector('.preview-big');
+    if (bigNum) {
+      bigNum.addEventListener('mouseenter', function () {
+        bigNum.classList.remove('glitching');
+        void bigNum.offsetWidth; /* force reflow to restart animation */
+        bigNum.classList.add('glitching');
+      });
+      bigNum.addEventListener('animationend', function () {
+        bigNum.classList.remove('glitching');
+      });
+    }
+
   })();
   </script>
 </body>
